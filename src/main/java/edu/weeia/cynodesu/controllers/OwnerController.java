@@ -1,4 +1,4 @@
-package edu.weeia.cynodesu.controllers.v1;
+package edu.weeia.cynodesu.controllers;
 
 import edu.weeia.cynodesu.api.v1.model.OwnerDTO;
 import edu.weeia.cynodesu.api.v1.model.OwnerListDTO;
