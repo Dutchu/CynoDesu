@@ -36,10 +36,6 @@ public class AppUser extends BaseEntity implements UserDetails {
     @Column(nullable = false)
     private String username; //doesn't need to be unique (multi-tenacy)
 
-    @Column(nullable = false, unique = true)
-    @Size(min = 5, max = 20)
-    private String uniqueId;
-
     @Column(name = "password_hash", length = 60)
     private String password;
 

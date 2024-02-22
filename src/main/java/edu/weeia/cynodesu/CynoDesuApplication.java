@@ -32,8 +32,7 @@ public class CynoDesuApplication {
 				            env.getProperty("server.port"),
 				            InetAddress.getLocalHost().getHostAddress(),
 				            env.getProperty("server.port"),
-				            Arrays.toString(env.getActiveProfiles())
-				);
+				            Arrays.toString(env.getActiveProfiles()));
 		log.info(banner);
 	}
 

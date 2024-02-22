@@ -20,7 +20,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     @EntityGraph(attributePaths = {"authorities"})
     Optional<AppUser> findOneWithAuthoritiesByUsername(String username);
 
-    Optional<AppUser> findOneByUniqueId(String uniqueId);
+    Optional<AppUser> findOneByUsername(String username);
 
     Optional<AppUser> findByIdAndActiveIsTrue(Long id);
 
