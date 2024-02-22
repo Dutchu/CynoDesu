@@ -16,4 +16,9 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<Object> handleNotFoundException(Exception exception, WebRequest request) {
         return new ResponseEntity<Object>("Resource Not Found", new HttpHeaders(), HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler({AuthenticationFailedException.class})
+    public ResponseEntity<Object> handleAuthenticationFailedException(RuntimeException exception, WebRequest request) {
+        return new ResponseEntity<Object>("Authentication Failed", new HttpHeaders(), HttpStatus.UNAUTHORIZED);
+    }
 }

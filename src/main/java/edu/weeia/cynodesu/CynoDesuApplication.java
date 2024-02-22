@@ -21,12 +21,12 @@ public class CynoDesuApplication {
 		ApplicationContext ctx = SpringApplication.run(CynoDesuApplication.class, args);
 		Environment env = ctx.getEnvironment();
 
-		log.info("""
+		String banner = String.format("""
 				Access URLs:
 				                ----------------------------------------------------------
-				                \\tLocal: \\t\\t\\thttp://localhost:{}
-				                \\tExternal: \\t\\thttp://{}:{}
-				                \\tEnvironment: \\t{}\\s
+				                \tLocal: \t\t\thttp://localhost:%s
+				                \tExternal: \t\thttp://%s:%s
+				                \tEnvironment: \t%s
 				                ----------------------------------------------------------""",
 
 				            env.getProperty("server.port"),
@@ -34,6 +34,7 @@ public class CynoDesuApplication {
 				            env.getProperty("server.port"),
 				            Arrays.toString(env.getActiveProfiles())
 				);
+		log.info(banner);
 	}
 
 }

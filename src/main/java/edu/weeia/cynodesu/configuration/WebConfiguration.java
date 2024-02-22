@@ -1,4 +1,4 @@
-package edu.weeia.cynodesu;
+package edu.weeia.cynodesu.configuration;
 
 import jakarta.servlet.Servlet;
 import org.h2.server.web.JakartaWebServlet;

@@ -1,11 +1,14 @@
 package edu.weeia.cynodesu.services;
 
-import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import edu.weeia.cynodesu.api.v1.model.UserCreatedDTO;
+import edu.weeia.cynodesu.api.v1.model.UserSignUpHashedDTO;
+import edu.weeia.cynodesu.api.v1.model.UserWithAuthoritiesDTO;
+import edu.weeia.cynodesu.domain.AppUser;
 
-@Service
-@Transactional
-@RequiredArgsConstructor
-public class UserService {
+import java.util.Optional;
+
+public interface UserService {
+    Optional<AppUser> findWithAuthoritiesByEmail(String email);
+
+    UserCreatedDTO save(UserSignUpHashedDTO user);
 }

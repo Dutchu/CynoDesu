@@ -1,58 +1,49 @@
 package edu.weeia.cynodesu.controllers;
 
-import edu.weeia.cynodesu.configuration.AppProperties;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.http.HttpHeaders;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import edu.weeia.cynodesu.api.v1.model.LoginDTO;
+import edu.weeia.cynodesu.api.v1.model.LoginResponseDTO;
+import edu.weeia.cynodesu.api.v1.model.UserSignUpDTO;
+import edu.weeia.cynodesu.api.v1.model.UserSingUpResponseDTO;
+import edu.weeia.cynodesu.services.AuthService;
+import edu.weeia.cynodesu.services.UserSignUpValidator;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-@Controller
-@RequestMapping("/auth")
+@Validated
+@RestController
 public class AuthController {
+    private final AuthService authService;
+    private final UserSignUpValidator userSignupValidator;
 
-    private final AppProperties appProperties;
-    private final ClientRegistration clientRegistration;
-
-    public AuthController(ClientRegistrationRepository registrations, AppProperties appProperties) {
-        this.appProperties = appProperties;
-        this.clientRegistration = registrations.findByRegistrationId("oidc");
+    public AuthController(AuthService authService, UserSignUpValidator userSignupValidator) {
+        this.authService = authService;
+        this.userSignupValidator = userSignupValidator;
     }
 
-    //FIXME: use keycloak rest api to handle these
-//    @GetMapping("/change-password")
-//    public String changePassword() {
-//        return "redirect:" + appProperties.getKeycloak().getAccountUrl();
-//    }
-//
-//    @GetMapping("/settings")
-//    public String settings(RedirectAttributes redirectAttributes, HttpServletRequest req, HttpServletResponse resp) {
-//        return getKeyCloakAccountUrl(redirectAttributes, req, resp);
-//    }
+    @PostMapping("/auth/login")
+    public ResponseEntity<LoginResponseDTO> authenticateUser(@RequestBody @Valid LoginDTO loginRequest) {
+        return ResponseEntity.ok().body(
+                authService.signIn(loginRequest));
+    }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request, @AuthenticationPrincipal(expression = "idToken") OidcIdToken idToken) {
-        var logoutUrlSb = new StringBuilder();
-        logoutUrlSb.append(this.clientRegistration.getProviderDetails().getConfigurationMetadata().get("end_session_endpoint").toString());
-        String originUrl = request.getHeader(HttpHeaders.ORIGIN);
-        if (!StringUtils.hasText(originUrl)) {
-            originUrl = appProperties.getWeb().getBaseUrl() + "?logout=true";
+    @PostMapping("/auth/signup")
+    public ResponseEntity<UserSingUpResponseDTO> registerUser(@RequestBody @Valid UserSignUpDTO signUpRequest, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        //do custom validation along with the BeanValidation
+        userSignupValidator.validate(signUpRequest, bindingResult);
+
+        if (bindingResult.hasErrors()) {
+            return ResponseEntity.badRequest().body(new UserSingUpResponseDTO(null,"Validation failed", false));
         }
-        logoutUrlSb.append("?id_token_hint=").append(idToken.getTokenValue()).append("&post_logout_redirect_uri=").append(originUrl);
 
-        request.getSession().invalidate();
-        return "redirect:" + logoutUrlSb;
+        return ResponseEntity.ok().body(
+                authService.signUp(signUpRequest)
+        );
     }
-
-    @GetMapping("/login")
-    public String login() {
-        return "redirect:/oauth2/authorization/oidc"; //this will redirect to login page
-    }
-
-
 }

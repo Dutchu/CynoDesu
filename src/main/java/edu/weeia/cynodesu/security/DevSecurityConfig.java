@@ -3,42 +3,39 @@ package edu.weeia.cynodesu.security;
 import edu.weeia.cynodesu.configuration.Constants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpMethod;
+
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.core.authority.mapping.GrantedAuthoritiesMapper;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.oidc.user.OidcUserAuthority;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.beans.factory.annotation.Value;
 
-import java.util.stream.Collectors;
 
-import java.util.List;
 import static org.springframework.security.config.Customizer.withDefaults;
 
-@Configuration
+
 @EnableWebSecurity
-public class SecurityConfig {
+@Configuration
+@Profile("dev")
+public class DevSecurityConfig {
+
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
-            "/v3/api-docs/**",
+            "/v2/api-docs",
+            "/h2-console/**",
             "/webjars/**",
             "/static/**",
-            "/error/**",
-            "/swagger-ui/**",
-            "/swagger-ui.html/**",
-            "/signup/**",
             "/" //landing page is allowed for all
     };
-
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         http
                 .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
                 .authorizeHttpRequests(ah -> ah
@@ -50,10 +47,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/**").authenticated()//individual api will be secured differently
                         .anyRequest().authenticated()) //this one will catch the rest patterns
                 .csrf(AbstractHttpConfigurer::disable)
-                .oauth2Login(withDefaults())
-                .oauth2ResourceServer(o2 -> o2.jwt(withDefaults()))
-                .oauth2Client(withDefaults());
-
+                .formLogin(withDefaults())
+                .httpBasic(withDefaults());
         return http.build();
     }
     @Bean
@@ -62,16 +57,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    JwtDecoder jwtDecoder(@Value("${spring.security.oauth2.client.provider.oidc.issuer-uri}") String issuerUri) {
-        return JwtDecoders.fromOidcIssuerLocation(issuerUri);
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 
-    @Bean
-    public GrantedAuthoritiesMapper userAuthoritiesMapper() {
-        return authorities -> authorities.stream().filter(a -> a instanceof OidcUserAuthority)
-                .map(a -> (OidcUserAuthority) a)
-                .map(a -> SecurityUtils.extractAuthorityFromClaims(a.getUserInfo().getClaims()))
-                .flatMap(List::stream)
-                .collect(Collectors.toSet());
-    }
 }

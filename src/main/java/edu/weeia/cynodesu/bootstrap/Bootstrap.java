@@ -20,8 +20,13 @@ public class Bootstrap implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
+        logUser();
         loadOwners();
         loadDogs();
+    }
+
+    private void logUser() {
+
     }
 
     private void loadOwners() {
@@ -52,18 +57,22 @@ public class Bootstrap implements CommandLineRunner {
     private void loadDogs() {
         Dog dog1 = new Dog();
         dog1.setName("Burek");
+        dog1.setContent("Labrador");
         dog1.setOwner(ownerRepository.findById(1L).get());
 
         Dog dog2 = new Dog();
         dog2.setName("Azor");
+        dog2.setContent("Owczarek Niemiecki");
         dog2.setOwner(ownerRepository.findById(2L).get());
 
         Dog dog3 = new Dog();
         dog3.setName("Reksio");
+        dog3.setContent("Mieszaniec");
         dog3.setOwner(ownerRepository.findById(3L).get());
 
         Dog dog4 = new Dog();
-        dog4.setName("Szarik");
+        dog4.setName("Rex");
+        dog4.setContent("Owczarek Niemiecki");
         dog4.setOwner(ownerRepository.findById(4L).get());
 
         dogRepository.save(dog1);

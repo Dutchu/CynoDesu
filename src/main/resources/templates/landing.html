@@ -2,7 +2,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="~{_fragments/header :: head(~{:: title}, ~{:: .custom-link})}">
-    <title> Note App - HOME</title>
+    <title>Article App - HOME</title>
     <!-- we can do the following to add extra css on this page -->
     <link class="custom-link" th:href="@{/static/css/some-custom-this-page-only.css}"/>
 </head>
@@ -12,39 +12,48 @@
 
 
 <div class="container">
-    <div class="card-deck mb-3">
-        <div class="px-3 py-3 pt-md-8 pb-md-8 mx-auto">
-            <div th:if="${param.logout} != null">
-                <div class="alert alert-success" role="alert">
-                    <span>You have been signed out</span>
-                </div>
-            </div>
 
-            <div th:if="${success} != null">
-                <div class="alert alert-success" role="alert">
-                    <span th:text="${success}"></span>
-                </div>
-            </div>
+    <div th:if="${param.logout} != null">
+        <div class="alert alert-success" role="alert">
+            <span>You have been signed out</span>
+        </div>
+    </div>
+
+    <div th:if="${success} != null">
+        <div class="alert alert-success" role="alert">
+            <span th:text="${success}"></span>
+        </div>
+    </div>
+
+    <div class="card-deck mb-3">
+        <div class="px-3 py-3  mx-auto">
 
             <div sec:authorize="isAuthenticated()">
-                <form action="#" method="post" th:action="@{/note/add}" th:object="${note}"
+                <form action="#" method="post" th:action="@{/dog/add}" th:object="${dog}"
                       enctype="multipart/form-data">
-                    <div th:replace="~{note/_notes :: note-editor}"></div>
+                    <div th:replace="~{dog/_dogs :: dog-editor}"></div>
 
-                    <button class="btn btn-primary btn-sm btn-block" type="submit" id="postNote-btn">Post Note</button>
+                    <button class="btn btn-primary btn-sm btn-block" type="submit" id="postArticle-btn">
+                        Post Article
+                    </button>
                 </form>
                 <hr/>
             </div>
 
-            <th:block th:each="note : ${notes}">
-                <th:block th:replace="~{note/_notes :: note-box}">
+            <th:block th:each="dog : ${dogs}">
+                <th:block th:replace="~{dog/_dogs :: article-preview-box}">
 
                 </th:block>
             </th:block>
 
-            <div th:if="${notes.getTotalElements() ==0}">
+
+            <th:block th:replace="~{_fragments/_utils :: pagination(${dogs},  ${_page_begin}, ${_page_end})}">
+
+            </th:block>
+
+            <div th:if="${dogs.getTotalElements() ==0}">
                 <div class="alert alert-warning" role="alert">
-                    <span>No notes available.</span>
+                    <span>No articles available.</span>
                 </div>
             </div>
         </div>

@@ -2,83 +2,73 @@ package edu.weeia.cynodesu.security;
 
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
-public class SecurityUtils {
+/**
+ * Utility class for Spring Security.
+ */
+public final class SecurityUtils {
+
     private SecurityUtils() {
     }
 
-    public static Optional<UUID> getCurrentUserId() {
-        Optional<CurrentUserToken> user = getCurrentUserDetails();
-
-        return user.map(CurrentUserToken::getUserId);
-    }
-
-    public static Optional<CurrentUserToken> getCurrentUserDetails() {
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        Authentication authentication = ctx.getAuthentication();
-
-        return authentication == null || !(authentication.getPrincipal() instanceof DefaultOidcUser) ?
-                Optional.empty() :
-                Optional.of(mapAuthenticationPrincipalToCurrentUser((DefaultOidcUser) authentication.getPrincipal()));
-
-    }
-
-    public static Optional<OidcIdToken> getCurrentUserJWT() {
-        SecurityContext ctx = SecurityContextHolder.getContext();
-        return Optional
-                .ofNullable(ctx.getAuthentication())
-                .filter(auth -> auth.getPrincipal() instanceof DefaultOidcUser)
-                .map(auth -> (DefaultOidcUser) auth.getPrincipal())
-                .map(DefaultOidcUser::getIdToken);
-    }
-
-    public static boolean isAuthenticated() {
+    /**
+     * Get the login of the current user.
+     *
+     * @return the login of the current user
+     */
+    public static Optional<String> getCurrentUserLogin() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return authentication != null && !(authentication instanceof AnonymousAuthenticationToken);
-    }
-
-    public static List<GrantedAuthority> mapRolesToGrantedAuthorities(List<String> roles) {
-        return roles == null ? Collections.emptyList() : roles.stream()
-                .filter(role -> role.startsWith("ROLE_"))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+        return Optional.ofNullable(authentication)
+                .map(a -> {
+                    if (a.getPrincipal() instanceof User) {
+                        User springSecurityUser = (User) a.getPrincipal();
+                        return springSecurityUser.getUsername();
+                    } else if (a.getPrincipal() instanceof String) {
+                        return (String) a.getPrincipal();
+                    }
+                    return null;
+                });
     }
 
     /**
-     * Extracts the authorities from the provided claims map.
-     *
-     * <p>This method attempts to retrieve the "groups" claim from the provided map, which is expected to be a list of user roles.
-     * Each role is then converted into a {@link SimpleGrantedAuthority} object, and all such objects are collected into a list.
-     * If the "groups" claim is not present or is not a list, an empty list is returned.</p>
-     *
-     * @param claims a map of claims, typically obtained from a security token such as a JWT
-     * @return a list of {@link GrantedAuthority} objects representing the user's roles, or an empty list if the "groups" claim is not present or is not a list
+     * @return PK ( ID ) of current id
      */
-    public static List<? extends GrantedAuthority> extractAuthorityFromClaims(Map<String, Object> claims) {
-        return Optional.ofNullable(claims.get("groups"))
-                .filter(List.class::isInstance)
-                .map(obj -> (List<?>) obj)
-                .stream()
-                .flatMap(Collection::stream)
-                .map(Object::toString)
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+    public static Long getCurrentUserId() {
+
+        User user = getCurrentUserDetails();
+        if (user instanceof AppUserDetails) {
+            AppUserDetails appUserDetails = (AppUserDetails) user;
+            return appUserDetails.getId();
+        }
+        return null;
     }
 
-    public static CurrentUserToken mapAuthenticationPrincipalToCurrentUser(DefaultOidcUser principal) {
-        return new CurrentUserToken(
-                principal.getAuthorities(),
-                principal.getIdToken(),
-                principal.getUserInfo());
+    public static User getCurrentUserDetails() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return getCurrentUserDetails(authentication);
+    }
+
+    public static User getCurrentUserDetails(Authentication authentication) {
+        User userDetails = null;
+        if (authentication != null && authentication.getPrincipal() instanceof User) {
+            userDetails = (User) authentication.getPrincipal();
+        }
+        return userDetails;
+    }
+
+
+    public static boolean isAuthenticated() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return !(authentication == null || authentication instanceof AnonymousAuthenticationToken);
+    }
+
+    public static boolean isCurrentUserHasRole(String authority) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        return authentication != null && authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(authority));
     }
 
 }
