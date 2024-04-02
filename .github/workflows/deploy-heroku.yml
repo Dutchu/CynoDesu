@@ -25,3 +25,20 @@ jobs:
         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
         heroku_email:  ${{secrets.HEROKU_EMAIL}}
         heroku_app_name:  ${{secrets.HEROKU_APP_NAME}}
+
+#    - name: Replace placeholders in application.properties
+#      run: |
+#        sed -i 's|{{DATABASE_URL}}|'"$DATABASE_URL"'|g' src/main/resources/application.properties
+#
+#    - name: Build and Deploy
+#      run: |
+#        ./mvnw clean install
+#        ./mvnw heroku:deploy
+#      env:
+#        DATABASE_URL: ${{ secrets.DATABASE_URL }}
+#
+#    - name: Build with Maven
+#      run: mvn clean install
+#
+#    - name: Run Spring Boot Application
+#      run: java -jar target/cynodesu-0.0.1-SNAPSHOT.jar --spring.profiles.active=production
