@@ -14,7 +14,7 @@ public class DogPreviewDTO {
 
     private Long id;
 
-    private String title;
+    private String name;
 
     private DogStatus status;
 

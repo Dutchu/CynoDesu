@@ -5,6 +5,7 @@ import edu.weeia.cynodesu.api.v1.model.UserSignUpDTO;
 import edu.weeia.cynodesu.api.v1.model.UserSignUpHashedDTO;
 import edu.weeia.cynodesu.domain.AppUser;
 import edu.weeia.cynodesu.repositories.AppUserRepository;
+import edu.weeia.cynodesu.security.AppUserDetails;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,11 @@ public class UserServiceImpl implements UserService {
 
     public Optional<AppUser> findWithAuthoritiesByEmail(String email) {
         return userRepository.findOneWithAuthoritiesByEmail(email);
+    }
+
+    @Override
+    public Optional<AppUser> findWithAuthoritiesByUsername(String username) {
+        return userRepository.findOneWithAuthoritiesByUsername(username);
     }
 
     public UserCreatedDTO save(UserSignUpHashedDTO toCreate) {

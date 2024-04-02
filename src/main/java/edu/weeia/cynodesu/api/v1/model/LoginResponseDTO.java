@@ -1,3 +1,5 @@
 package edu.weeia.cynodesu.api.v1.model;
 
-public record LoginResponseDTO (String accessToken, boolean success) {}
+import java.security.Principal;
+
+public record LoginResponseDTO (String accessToken, Principal principal) {}

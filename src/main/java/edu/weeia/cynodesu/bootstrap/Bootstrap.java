@@ -1,14 +1,12 @@
 package edu.weeia.cynodesu.bootstrap;
 
-import edu.weeia.cynodesu.domain.AppUser;
-import edu.weeia.cynodesu.domain.Authority;
-import edu.weeia.cynodesu.domain.Dog;
-import edu.weeia.cynodesu.domain.Owner;
+import edu.weeia.cynodesu.domain.*;
 import edu.weeia.cynodesu.repositories.AppUserRepository;
 import edu.weeia.cynodesu.repositories.AuthorityRepository;
 import edu.weeia.cynodesu.repositories.DogRepository;
 import edu.weeia.cynodesu.repositories.OwnerRepository;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -21,12 +19,14 @@ public class Bootstrap implements CommandLineRunner {
     private final OwnerRepository ownerRepository;
     private final AppUserRepository appUserRepository;
     private final AuthorityRepository authorityRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public Bootstrap(DogRepository dogRepository, OwnerRepository ownerRepository, AppUserRepository appUserRepository, AuthorityRepository authorityRepository) {
+    public Bootstrap(DogRepository dogRepository, OwnerRepository ownerRepository, AppUserRepository appUserRepository, AuthorityRepository authorityRepository, PasswordEncoder passwordEncoder) {
         this.dogRepository = dogRepository;
         this.ownerRepository = ownerRepository;
         this.appUserRepository = appUserRepository;
         this.authorityRepository = authorityRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -53,10 +53,11 @@ public class Bootstrap implements CommandLineRunner {
     private void logUser() {
         AppUser appUser = new AppUser();
         appUser.setEmail("admin@admin.pl");
-        appUser.setPassword("admin");
+        appUser.setPassword(passwordEncoder.encode("admin"));
         appUser.setFirstName("Admin");
         appUser.setLastName("Admin");
         appUser.setUsername("admin");
+        appUser.setActive(true);
         appUser.setAuthorities(authorityRepository.findByNameIn(List.of("ROLE_USER", "ROLE_ADMIN")));
 
         appUserRepository.save(appUser);
@@ -95,7 +96,20 @@ public class Bootstrap implements CommandLineRunner {
         dog1.setContent("Labrador");
         dog1.setCreatedByUser(appUserRepository.findById(1L).get());
         dog1.setCreatedDate(Instant.now());
+        dog1.setStatus(DogStatus.ACCEPTED);
         dog1.setOwner(ownerRepository.findById(1L).get());
+
+        //load 20 more dogs
+        for (int i = 0; i < 20; i++) {
+            Dog dog = new Dog();
+            dog.setName("Dog" + i);
+            dog.setContent("Labrador");
+            dog.setCreatedByUser(appUserRepository.findById(1L).get());
+            dog.setCreatedDate(Instant.now());
+            dog.setStatus(DogStatus.ACCEPTED);
+            dog.setOwner(ownerRepository.findById(1L).get());
+            dogRepository.save(dog);
+        }
 
         Dog dog2 = new Dog();
         dog2.setName("Azor");

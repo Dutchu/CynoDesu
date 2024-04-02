@@ -1,4 +1,4 @@
-package edu.weeia.cynodesu.services;
+package edu.weeia.cynodesu.exceptions;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException() {

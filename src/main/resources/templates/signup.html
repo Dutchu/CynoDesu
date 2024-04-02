@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org" lang="eng">
 
 <head th:replace="~{_fragments/header :: head(~{:: title}, ~{:: .custom-link})}">
     <title> Note App - Signup</title>
     <!-- we can do the following to add extra css on this page -->
-    <link class="custom-link" th:href="@{/static/css/some-custom-this-page-only.css}"/>
+    <link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
 </head>
 <body>
 
@@ -51,19 +52,19 @@
                             <div class="input-group-prepend">
                                 <span class="input-group-text">@</span>
                             </div>
-                            <input type="text" class="form-control" th:field="*{uniqueId}"
+                            <input type="text" class="form-control" th:field="*{username}"
                                    required>
                         </div>
-                        <span th:errors="*{uniqueId}" th:if="${#fields.hasErrors('uniqueId')}" class="error"></span>
+                        <span th:errors="*{username}" th:if="${#fields.hasErrors('username')}" class="error"></span>
                     </div>
 
 
                     <div class="mb-3">
-                        <label for="pwdPlaintext">Password</label>
+                        <label for="password">Password</label>
                         <input
                                 class="form-control" type="password"
-                                th:field="*{pwdPlaintext}" required/>
-                        <span th:errors="*{pwdPlaintext}" th:if="${#fields.hasErrors('pwdPlaintext')}"
+                                th:field="*{password}" required/>
+                        <span th:errors="*{password}" th:if="${#fields.hasErrors('password')}"
                               class="error"></span>
                     </div>
 
@@ -87,7 +88,6 @@
 </div>
 
 <div th:replace="~{_fragments/footer :: js-imports(~{::.custom-script})}">
-    <script class="custom-script" th:src="@{/static/js/custom.js}"></script>
 </div>
 
 </body>

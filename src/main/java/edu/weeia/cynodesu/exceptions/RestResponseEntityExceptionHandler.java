@@ -1,6 +1,5 @@
-package edu.weeia.cynodesu.controllers.exceptions;
+package edu.weeia.cynodesu.exceptions;
 
-import edu.weeia.cynodesu.services.ResourceNotFoundException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

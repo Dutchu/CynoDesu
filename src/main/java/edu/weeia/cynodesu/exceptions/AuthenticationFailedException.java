@@ -1,4 +1,4 @@
-package edu.weeia.cynodesu.controllers.exceptions;
+package edu.weeia.cynodesu.exceptions;
 
 public class AuthenticationFailedException extends RuntimeException {
     public AuthenticationFailedException(String message) {

@@ -7,6 +7,7 @@ import edu.weeia.cynodesu.api.v1.model.DogPreviewDTO;
 import edu.weeia.cynodesu.api.v1.model.GetDogDTO;
 import edu.weeia.cynodesu.domain.Dog;
 import edu.weeia.cynodesu.domain.DogStatus;
+import edu.weeia.cynodesu.exceptions.ResourceNotFoundException;
 import edu.weeia.cynodesu.repositories.DogRepository;
 import edu.weeia.cynodesu.repositories.OwnerRepository;
 import org.springframework.cache.annotation.Cacheable;

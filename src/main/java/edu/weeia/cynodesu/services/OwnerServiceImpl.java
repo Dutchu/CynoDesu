@@ -3,6 +3,7 @@ package edu.weeia.cynodesu.services;
 import edu.weeia.cynodesu.api.v1.mapper.OwnerMapper;
 import edu.weeia.cynodesu.api.v1.model.OwnerDTO;
 import edu.weeia.cynodesu.domain.Owner;
+import edu.weeia.cynodesu.exceptions.ResourceNotFoundException;
 import edu.weeia.cynodesu.repositories.OwnerRepository;
 import org.springframework.stereotype.Service;
 

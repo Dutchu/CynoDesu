@@ -45,7 +45,7 @@ public class DogController {
         return "redirect:/";
     }
 
-    @RequestMapping({"", "/"})
+    @GetMapping({"/"})
     public String getAllDogs(Model model) {
 //        return new ResponseEntity<>(
 //                new DogListDTO(dogService.getAllDogs().stream().toList()), HttpStatus.OK);
@@ -68,7 +68,7 @@ public class DogController {
             Model model) {
         dogService.createNewDog(dogName);
         model.addAttribute("dogs", dogService.getAllDogs());
-        return "dogs :: dogs-list";
+        return "dog/dogs :: dogs-list";
     }
 
     @GetMapping("/{name}")
@@ -82,7 +82,7 @@ public class DogController {
     public String editDog(@PathVariable Long id, Model model) {
         model.addAttribute("dog", dogService.getDogById(id));
         model.addAttribute("owners", ownerService.getAllOwners());
-        return "dogs/edit-dog";
+        return "dog/dogs/edit-dog";
     }
 
 }

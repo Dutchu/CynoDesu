@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: 'Cyno-Desu'
   datasource:
     url: jdbc:h2:mem:testdb-dev
     driverClassName: org.h2.Driver
@@ -10,3 +12,8 @@ spring:
       path: /h2-console
 server:
   port: 8081
+
+logging:
+    level:
+      org.springframework.security: DEBUG
+      thymeleaf: DEBUG

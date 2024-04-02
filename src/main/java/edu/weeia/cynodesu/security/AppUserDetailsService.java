@@ -1,28 +1,30 @@
 package edu.weeia.cynodesu.security;
 
 import edu.weeia.cynodesu.domain.AppUser;
-import edu.weeia.cynodesu.repositories.AppUserRepository;
+import edu.weeia.cynodesu.services.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-public class CustomUserDetailsService implements UserDetailsService {
+@Service
+@AllArgsConstructor
+public class AppUserDetailsService implements UserDetailsService {
 
-    private final AppUserRepository userRepository;
-
-    public CustomUserDetailsService(AppUserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    private final UserService userService;
 
     @Override
-    public AppUserDetails loadUserByUsername(String email) {
-        Optional<AppUser> userFromDatabase = userRepository.findOneWithAuthoritiesByEmail(email);
+    public AppUserDetails loadUserByUsername(String username) {
+        Optional<AppUser> userFromDatabase = userService.findWithAuthoritiesByUsername(username);
 
-        return userFromDatabase
+        AppUserDetails result = userFromDatabase
                 .map(this::getCustomUserDetails)
-                .orElseThrow(() -> new UsernameNotFoundException(" User with login:" + email + " was not found in the " + " database "));
+                .orElseThrow(() -> new UsernameNotFoundException(" User with login:" + username + " was not found in the " + " database "));
+        System.out.println(result);
+        return result;
     }
 
     @Transactional(readOnly = true)

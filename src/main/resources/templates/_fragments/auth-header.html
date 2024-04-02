@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div th:fragment="updateHeaderAndCloseModal(principal, htmxScript)" th:remove="tag">
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var principal = [[${principal}]];
+        var htmxScript = [[${htmxScript}]];
+
+        // Use the principal to update the header
+        // ...
+
+        // Use the htmxScript to close the modal
+        // ...
+        /*]]>*/
+    </script>
+</div>
+</body>
+</html>
