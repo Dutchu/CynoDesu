@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>cyno-desu</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<h1 class="text-center" style="margin-top: 20px; margin-bottom: 20px;"
+>Keep your dogs in order!</h1>
+<h2 class="text-center" style="margin-top: 20px; margin-bottom: 20px;">
+    <a href="" th:href="@{/static}">Home</a>
+</h2>
+
+
+<div class="card">
+    <form>
+        <div class="row">
+            <div class="form-group pmd-textfield pmd-textfield-outline pmd-textfield-floating-label col">
+                <label for="new-dog">Name</label>
+                <input id="new-dog" type="text" name="new-dog" class="form-control">
+            </div>
+            <div class="form-group pmd-textfield pmd-textfield-outline pmd-textfield-floating-label col-md-4">
+                <label for="owner-select">Owner</label>
+                <select id="owner-select" class="form-control">
+                    <option th:each="owner : ${owners}" th:value="${owner.firstName}" th:text="${owner.firstName}"></option>
+                </select>
+            </div>
+        </div>
+        <button
+                hx-post="http://localhost:8080/api/v1/dogs"
+                hx-include="#new-dog, #owner-select"
+                hx-target=".dogs-list"
+                type="submit" class="btn pmd-ripple-effect btn-primary">
+            Create
+        </button>
+    </form>
+</div>
+<div th:fragment="dogs-list" class="dogs-list">
+    <div class="container">
+        <div class="row">
+            <table class="table table-responsive table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Dog's name</th>
+                    <th>Dog's owner</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dog : ${dogs}">
+                    <td th:text="${dog.getName()}"></td>
+                    <td th:text="${dog.owner.firstName}"></td>
+                    <td>
+                        <button type="submit" class="btn btn-primary"
+                                th:attr="hx-delete=@{http://localhost:8080/api/v1/dogs/{id}(id=${dog.id})}"
+                                hx-swap="outerHTML"
+                                hx-target="closest tr"
+                        >Delete dog
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="~{_fragments/header :: head(~{:: title}, ~{:: .custom-link})}">
+    <title>Article App - HOME</title>
+    <!-- we can do the following to add extra css on this page -->
+    <!--    <link class="custom-link" th:href="@{/static/css/some-custom-this-page-only.css}"/>-->
+    <link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<div th:replace="~{_fragments/header :: headerbar}"></div>
+
+
+<div class="container">
+
+    <div th:if="${param.logout} != null">
+        <div class="alert alert-success" role="alert">
+            <span>You have been signed out</span>
+        </div>
+    </div>
+
+    <div th:if="${success} != null">
+        <div class="alert alert-success" role="alert">
+            <span th:text="${success}"></span>
+        </div>
+    </div>
+
+    <div class="card-deck mb-3">
+        <div class="px-3 py-3  mx-auto">
+
+
+            <div sec:authorize="isAuthenticated()">
+                <form action="#" method="post" th:action="@{/dog/add}" th:object="${dog}"
+                      enctype="multipart/form-data">
+                    <div th:replace="~{dog/_dogs :: dog-editor}"></div>
+
+                    <button class="btn btn-primary btn-sm btn-block" type="submit" id="postArticle-btn">
+                        Post Article
+                    </button>
+                </form>
+                <hr/>
+            </div>
+
+            <h1 class="text-center" style="margin-top: 20px; margin-bottom: 20px;"
+            >Keep your dogs in order!</h1>
+            <h2 class="text-center" style="margin-top: 20px; margin-bottom: 20px;">
+                <a href="" th:href="@{/static}">Home</a>
+            </h2>
+
+            <section class="bg-light">
+                <div class="container">
+                    <div class="text-center">
+                        <h2 class="section-heading text-uppercase">MODAL</h2>
+                        <p class="lead">Try this modal</p>
+                    </div>
+                    <div class="row justify-content-center">
+                        <div class="col-lg-8 text-center">
+                            <p>
+                                Please click the button below to see the modal.
+                            </p>
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#exampleModal">
+                                Launch demo modal
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <th:block th:each=" dog : ${dogs}
+                                    ">
+                <th:block th:replace="~{dog/_dogs :: dog-preview-box}">
+
+                </th:block>
+            </th:block>
+
+
+            <th:block
+                    th:replace="~{_fragments/_utils :: pagination(${dogs},  ${_page_begin}, ${_page_end})}">
+
+            </th:block>
+
+            <div th:if="${dogs.getTotalElements() ==0}">
+                <div class="alert alert-warning" role="alert">
+                    <span>No articles available.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div th:replace="~{_fragments/footer :: page-footer}" th:remove="tag"></div>
+
+</div>
+
+<div th:replace="~{_fragments/footer :: js-imports(~{::.custom-script})}">
+    <script class="custom-script" th:src="@{/static/js/custom.js}"></script>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
