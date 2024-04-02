@@ -15,13 +15,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
-
-
 @EnableWebSecurity
 @Configuration
-@Profile("dev")
-public class DevSecurityConfig {
-    private final CustomSuccessHandler customSuccessHandler;
+@Profile("prod")
+public class ProdSecurityConfig {
+    private final ProdCustomSuccessHandler prodSuccessHandler;
 
     private static final String[] AUTH_WHITELIST = {
             "/swagger-resources/**",
@@ -36,10 +34,9 @@ public class DevSecurityConfig {
             "/index"
     };
 
-    public DevSecurityConfig(CustomSuccessHandler customSuccessHandler) {
-        this.customSuccessHandler = customSuccessHandler;
+    public ProdSecurityConfig(ProdCustomSuccessHandler prodSuccessHandler) {
+        this.prodSuccessHandler = prodSuccessHandler;
     }
-
 
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -58,7 +55,7 @@ public class DevSecurityConfig {
                         .requestMatchers("/api/**").authenticated())
                 .formLogin(formLogin -> formLogin
                         .loginPage("/auth/login")
-                        .successHandler(customSuccessHandler)
+                        .successHandler(prodSuccessHandler)
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout") // the URL on which a POST will trigger logout
