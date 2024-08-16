@@ -1,0 +1,18 @@
+version: '3.8'  # Specify the version of Docker Compose
+
+services:
+  postgres_db:  # Name of the service
+    image: postgres:latest  # Use the official PostgreSQL image
+    container_name: cyno-desu-db  # Name of the container
+    environment:
+      POSTGRES_USER: cyno  # Set the PostgreSQL username
+      POSTGRES_PASSWORD: desu  # Set the PostgreSQL password
+      POSTGRES_DB: dev  # Set the name of the default database
+    ports:
+      - "5454:5432"  # Map the container's port 5432 to the host's port 5454
+    volumes:
+      - postgres_data:/var/lib/postgresql/data  # Persist the PostgreSQL data
+
+volumes:
+  postgres_data:
+    driver: local  # Use a local driver to persist data
