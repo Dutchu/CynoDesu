@@ -1,0 +1,12 @@
+Alternative Approaches
+URL References: Instead of encoding images directly, you can store images in a file storage (like AWS S3 or your server's file system) and send a URL reference to the image in your DTO. This approach:
+
+Reduces payload size.
+Utilizes browser caching.
+Allows images to be loaded lazily or on demand.
+Content Delivery Networks (CDNs): If the images are static, use a CDN to serve them. Send URLs to the view layer, which can benefit from faster loading times and caching.
+
+Blob Storage: For applications that require handling large images, consider using blob storage. This method keeps the images separate from the main data payload and only loads them when necessary.
+
+UUIDs for DOGS as universal ID shared across platforms. Alternatively Develop system like PESEL
+

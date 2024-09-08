@@ -1,0 +1,133 @@
+html {
+    scroll-behavior: smooth;
+}
+.hero {
+    background-image: url('/images/hero-background.jpg'); /* Replace with your image path */
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding: 100px 0;
+}
+.hero h1 {
+    font-size: 3rem;
+}
+.section {
+    padding: 50px 0;
+}
+.testimonials {
+    background-color: #f8f9fa;
+}
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+}
+
+/* custom.css */
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+#sidebar {
+    min-width: 200px;
+    max-width: 200px;
+}
+
+#content {
+    width: 100%;
+    padding-left: 220px;
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.sidebar-header {
+    padding: 20px;
+    background: #333;
+}
+
+.components {
+    padding: 20px 0;
+    list-style: none;
+}
+
+.components a {
+    padding: 10px;
+    font-size: 1.1rem;
+    color: #ddd;
+    display: block;
+    text-decoration: none;
+}
+
+.components a:hover {
+    background: #575757;
+    color: #fff;
+}
+
+
+/*SIDEBAR*/
+/* styles.css */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f8f9fa;
+}
+
+.wrapper {
+    display: flex;
+    align-items: stretch;
+}
+
+#sidebar {
+    min-width: 250px;
+    max-width: 250px;
+    background: #343a40;
+    color: #fff;
+    transition: all 0.3s;
+}
+
+#sidebar .sidebar-header {
+    padding: 20px;
+    background: #007bff;
+}
+
+#sidebar .list-group-item {
+    padding: 15px;
+    font-size: 1.1rem;
+    border: none;
+    transition: all 0.3s;
+}
+
+#sidebar .list-group-item:hover {
+    background: #007bff;
+    color: #fff;
+}
+
+#sidebar .list-group-item i {
+    margin-right: 10px;
+}
+
+#content {
+    width: 100%;
+    padding: 20px;
+    transition: all 0.3s;
+}
+
+#sidebarCollapse {
+    background: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    padding: 8px 12px;
+    font-size: 1.2rem;
+    border-radius: 50%;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+#sidebarCollapse i {
+    margin-right: 0;
+}

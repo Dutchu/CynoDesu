@@ -1,0 +1,174 @@
+<div th:fragment="list">
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#createDogModal">
+        Create Dog
+    </button>
+    <div class="container py-5" id="dog-list">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!--/*@thymesVar id="dog" type="edu.weeia.cynodesu.api.v1.model.DogPreviewDTO"*/-->
+            <div th:each="dog : ${dogs}" class="card m-2" style="width: 18rem;">
+                <img th:src="@{'data:image/png;base64,' + ${dog.icon}}" class="card-img-top"
+                     alt="Facility Icon" style="height: 180px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${dog.name}">Dog Name</h5>
+                    <p class="card-text" th:text="${dog.sex}">Gender</p>
+                    <p class="card-text" th:text="${dog.breed.getName()}">Breed</p>
+                    <p class="card-text" th:text="${dog.age}">Dog Age</p>
+                    <!-- Add more dog details as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Pagination -->
+    <div class="flex-box" th:replace="~{_fragments/_utils :: pagination('/facility/'+${facilityId}, ${dogs}, ${_page_begin}, ${_page_end}, ${pageNumbers})}"></div>
+
+    <div th:fragment="create-dog-form">
+        <!-- Bootstrap Modal -->
+        <div class="modal fade" id="createDogModal" tabindex="-1" aria-labelledby="createDogLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createDogLabel">Create New Dog</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:object="${createDogDto}"
+                              method="post" enctype="multipart/form-data"
+                              th:attr="hx-post=|/facility/${facilityId}/create-dog|"
+                              hx-target="#message-container"
+                              hx-swap="innerHTML"
+                              hx-on="htmx:afterOnLoad: showToast()">
+                            <!--                              hx-on="htmx:afterRequest: closeBackDrop">-->
+                            <!-- Debugging output to confirm facilityId -->
+                            <p th:text="'Facility ID: ' + ${facilityId}"></p>
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Dog Name</label>
+                                <input type="text" th:field="*{name}" class="form-control" id="name" required>
+                                <span id="errorContainer" class="text-danger"></span>
+                                <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"
+                                      class="text-danger"></span>
+                            </div>
+                            <!-- Notes -->
+                            <div class="mb-3">
+                                <label for="notes" class="form-label">Notes</label>
+                                <textarea th:field="*{content}" class="form-control" id="notes" rows="3"></textarea>
+                            </div>
+                            <!-- Breed Selection -->
+                            <div class="mb-3">
+                                <label for="breed" class="form-label">Breed</label>
+                                <select class="form-select" id="breed" name="breed" th:field="*{breed}">
+                                    <option value="" disabled selected>Select Breed</option>
+                                    <option th:each="breed : ${breeds}" th:value="${breed.id}"
+                                            th:text="${breed.name}"></option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}"
+                                     class="text-danger"></div>
+                            </div>
+                            <!-- Date of Birth -->
+                            <div class="mb-3">
+                                <label for="dob" class="form-label">Date of Birth</label>
+                                <input type="date" class="form-control" id="dob" name="dob" th:field="*{dob}"/>
+                                <div th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}" class="text-danger"></div>
+                            </div>
+                            <!-- Sex Selection -->
+                            <div class="mb-3">
+                                <label for="sex" class="form-label">Sex</label>
+                                <select class="form-select" id="sex" name="sex" th:field="*{sex}">
+                                    <option value="" disabled selected>Select Sex</option>
+                                    <option th:value="STUD" th:text="Male"></option>
+                                    <option th:value="BITCH" th:text="Female"></option>
+                                </select>
+                                <div th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}" class="text-danger"></div>
+                            </div>
+                            <!-- Picture Selection -->
+                            <div class="mb-3">
+                                <label for="image" class="form-label">Dog Image</label>
+                                <input type="file" th:field="*{image}" class="form-control" id="image">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Create Dog
+                                </button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- File: fragments/dog-detail.html -->
+<div th:fragment="dog-detail">
+    <div class="container">
+        <!-- Dog Icon -->
+        <div class="row mb-3">
+            <div class="col text-center">
+                <img th:src="@{'data:image/png;base64,' + ${dogDetail.icon}}"
+                     alt="Dog Icon" class="img-fluid" style="width: 100px; height: 100px;"/>
+            </div>
+        </div>
+
+        <!-- Basic Details -->
+        <div class="row mb-3">
+            <div class="col">
+                <h6>ID:</h6>
+                <p th:text="${dogDetail.id}"></p>
+            </div>
+            <div class="col">
+                <h6>User ID:</h6>
+                <p th:text="${dogDetail.userId}"></p>
+            </div>
+            <div class="col">
+                <h6>User Name:</h6>
+                <p th:text="${dogDetail.userName}"></p>
+            </div>
+        </div>
+
+        <!-- Additional Details -->
+        <div class="row mb-3">
+            <div class="col">
+                <h6>Created At:</h6>
+                <!--/*@thymesVar id="dogDetail" type="edu.weeia.cynodesu.api.v1.model.DogDetailDto"*/-->
+                <p th:text="${#temporals.format(dogDetail.createdAt, 'dd MMM yyyy hh:mm a')}"></p>
+            </div>
+            <div class="col">
+                <h6>Name:</h6>
+                <p th:text="${dogDetail.name}"></p>
+            </div>
+            <div class="col">
+                <h6>Facility ID:</h6>
+                <p th:text="${dogDetail.breedingFacilityId}"></p>
+            </div>
+        </div>
+
+        <!-- Content -->
+        <div class="row mb-3">
+            <div class="col">
+                <h6>Content:</h6>
+                <p th:text="${dogDetail.content}"></p>
+            </div>
+        </div>
+
+        <!-- Files -->
+        <div class="row mb-3">
+            <div class="col">
+                <h6>Files:</h6>
+                <ul>
+                    <li th:each="file : ${dogDetail.docs}" th:text="${file.fileName}"></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Scores -->
+        <div class="row mb-3">
+            <div class="col">
+                <h6>Scores:</h6>
+                <ul>
+                    <li th:each="score : ${dogDetail.scores}" th:text="${score}"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

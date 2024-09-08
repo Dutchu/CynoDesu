@@ -1,0 +1,6 @@
+name - required user provided (Text field in th interface),
+owner - required user provided (drop list in the interface),
+content - optional user provided (Text field in the interface),
+status - required app provided (Managed in admin window to approve dogs creation)
+attachedFiles - optional user provided (default imagae and image loading button in the interface),
+scores - optional app provided. Competition will own relation.

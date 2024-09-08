@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="~{_fragments/_header :: head(~{:: title}, ~{:: .custom-link})}">
+    <title>Article App - HOME</title>
+    <!-- we can do the following to add extra css on this page -->
+    <!--    <link class="custom-link" th:href="@{/static/css/some-custom-this-page-only.css}"/>-->
+    <link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" rel="stylesheet">
+    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
+    <script src="https://unpkg.com/htmx.org@1.9.10"
+            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
+            crossorigin="anonymous"></script>
+</head>
+<body>
+
+<!--<div th:replace="~{_fragments/_header :: headerbar}"></div>-->
+
+
+<div class="container">
+
+    <div th:if="${param.logout} != null">
+        <div class="alert alert-success" role="alert">
+            <span>You have been signed out</span>
+        </div>
+    </div>
+
+    <div th:if="${param.success} != null">
+        <div class="alert alert-success" role="alert">
+            <span th:text="${success}"></span>
+        </div>
+    </div>
+
+    <div class="card-deck mb-3">
+        <div class="px-3 py-3  mx-auto">
+
+            <div sec:authorize="isAuthenticated()">
+                <form action="#" method="post" th:action="@{/dog/add}" th:object="${dog}"
+                      enctype="multipart/form-data">
+                    <div th:replace="~{dog/_dogs :: dog-editor}"></div>
+
+                    <button class="btn btn-primary btn-sm btn-block" type="submit" id="postArticle-btn">
+                        Register a Dog
+                    </button>
+
+                </form>
+                <hr/>
+            </div>
+
+            <h1 class="text-center" style="margin-top: 20px; margin-bottom: 20px;"
+            >Keep your dogs in order!</h1>
+            <h2 class="text-center" style="margin-top: 20px; margin-bottom: 20px;">
+                <a href="" th:href="@{/static}">Home</a>
+            </h2>
+
+<!--            <section class="bg-light">-->
+<!--                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">-->
+<!--                    Login-->
+<!--                </button>-->
+<!--                <div id="loginModal" class="modal fade" tabindex="-1" aria-labelledby="loginModalLabel"-->
+<!--                     aria-hidden="true">-->
+<!--                    &lt;!&ndash; Modal content &ndash;&gt;-->
+<!--                    <div class="modal-dialog">-->
+<!--                        <div class="modal-content">-->
+<!--                            <div class="modal-header">-->
+<!--                                <h5 class="modal-title" id="loginModalLabel">Login</h5>-->
+<!--                                <button type="button" class="btn-close" data-bs-dismiss="modal"-->
+<!--                                        aria-label="Close"></button>-->
+<!--                            </div>-->
+<!--                            <div class="modal-body">-->
+<!--                                <form id="loginForm"-->
+<!--                                      method="post"-->
+<!--                                      hx-post="/auth/login"-->
+<!--                                      hx-trigger="submit"-->
+<!--                                      hx-target="#headerbar"-->
+<!--                                      hx-swap="outerHTML">-->
+<!--                                    &lt;!&ndash; Form fields &ndash;&gt;-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label for="username">Username</label>-->
+<!--                                        <input type="text" class="form-control" id="username" name="username" required>-->
+<!--                                    </div>-->
+<!--                                    <div class="form-group">-->
+<!--                                        <label for="password">Password</label>-->
+<!--                                        <input type="password" class="form-control" id="password" name="password"-->
+<!--                                               required>-->
+<!--                                    </div>-->
+<!--                                    &lt;!&ndash;                                            type="submit" class="btn btn-primary"&ndash;&gt;-->
+<!--                                    <button type="submit" class="btn pmd-ripple-effect btn-primary">-->
+<!--                                        Submit-->
+<!--                                    </button>-->
+<!--                                </form>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </section>-->
+
+        </div>
+        <!-- Thymeleaf logic to include the modal fragment -->
+        <div th:if="${showModal}">
+            <div th:replace="_fragments/_registration_success :: modal"></div>
+        </div>
+
+        <!-- Script to automatically show the modal if showModal is true -->
+        <script th:if="${showregistrationSuccess}">
+            var myModal = new bootstrap.Modal(document.getElementById('registrationSuccessModal'));
+            myModal.show();
+        </script>
+
+        <!-- Include the login modal fragment -->
+        <div th:replace="~{_fragments/_login_form :: login-modal}"></div>
+        <!-- Script to automatically show the modal if 'showModal' is true -->
+        <script th:if="${showLoginForm}">
+            var loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+        </script>
+
+    </div>
+
+    <div th:replace="~{_fragments/_footer :: page-footer}" th:remove="tag"></div>
+
+</div>
+
+</body>
+</html>

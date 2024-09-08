@@ -1,0 +1,52 @@
+<div th:fragment="create-dog-form">
+    <h2>Create a New Dog</h2>
+    <form th:action="@{/dog/create-dog}" th:object="${createDogDTO}" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="name" class="form-label">Dog Name</label>
+            <input type="text" class="form-control" id="name" name="name" th:field="*{name}" required />
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="content" class="form-label">Description</label>
+            <textarea class="form-control" id="content" name="content" th:field="*{content}" rows="3" maxlength="500"></textarea>
+            <div th:if="${#fields.hasErrors('content')}" th:errors="*{content}" class="text-danger"></div>
+        </div>
+
+        <!-- Breed Selection -->
+        <div class="mb-3">
+            <label for="breed" class="form-label">Breed</label>
+            <select class="form-select" id="breed" name="breed" th:field="*{breed}">
+                <option value="" disabled selected>Select Breed</option>
+                <option th:each="breed : ${breedsConfig.breeds}" th:value="${breed}" th:text="${breed}"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('breed')}" th:errors="*{breed}" class="text-danger"></div>
+        </div>
+
+        <!-- Date of Birth -->
+        <div class="mb-3">
+            <label for="dob" class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" id="dob" name="dob" th:field="*{dob}" />
+            <div th:if="${#fields.hasErrors('dob')}" th:errors="*{dob}" class="text-danger"></div>
+        </div>
+
+        <!-- Sex Selection -->
+        <div class="mb-3">
+            <label for="sex" class="form-label">Sex</label>
+            <select class="form-select" id="sex" name="sex" th:field="*{sex}">
+                <option value="" disabled selected>Select Sex</option>
+                <option th:value="MALE" th:text="Male"></option>
+                <option th:value="FEMALE" th:text="Female"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('sex')}" th:errors="*{sex}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="image" class="form-label">Dog Image (optional)</label>
+            <input type="file" class="form-control" id="image" name="image" th:field="*{image}" />
+            <div th:if="${#fields.hasErrors('image')}" th:errors="*{image}" class="text-danger"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Dog</button>
+    </form>
+</div>

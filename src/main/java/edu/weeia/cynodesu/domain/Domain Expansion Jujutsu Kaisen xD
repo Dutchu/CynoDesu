@@ -1,0 +1,48 @@
+1. Basic Identification Information
+ID: A unique identifier for the dog in the system.
+Name: The dog's name, which may be useful for identification and record-keeping.
+Breed: The breed of the dog, which is important for breeding plans and potential sales.
+Date of Birth: The date the dog was born, essential for tracking age and breeding eligibility.
+Gender: Male or female, critical for breeding decisions.
+Registration Number: If the dog is registered with a kennel club or other breeding organization.
+2. Health and Medical Information
+Health Records: A summary of past medical treatments, vaccinations, and any health conditions.
+Vaccination Status: Dates and types of vaccinations the dog has received.
+Genetic Testing Results: Information about genetic screening, such as tests for breed-specific diseases or conditions.
+Veterinary Visits: Records of past veterinary visits, treatments, and any ongoing health issues.
+Microchip Number: If the dog is microchipped, the number would be recorded for identification purposes.
+Spay/Neuter Status: Indicates whether the dog has been spayed or neutered, which can affect breeding decisions.
+3. Breeding Information
+Pedigree: Information about the dog's lineage, including parents, grandparents, and beyond.
+Breeding Status: Current status such as "Available for Breeding," "Pregnant," "Nursing," or "Retired from Breeding."
+Mating History: Records of past mating events, including partners and dates.
+Offspring Records: Information about puppies produced, including their birth dates, genders, health status, and any sales or transfers.
+Heat Cycle Information: For females, the dates and duration of their heat cycles to help schedule breeding.
+4. Behavioral Information
+Temperament: Notes about the dog’s behavior, such as aggression, friendliness, trainability, etc.
+Training Records: Information on any training the dog has received (e.g., obedience, agility).
+Socialization: Notes on how the dog interacts with other dogs, humans, or environments.
+5. Facility Management Information
+Current Location: Information on where the dog is currently housed within the facility (e.g., kennel number or area).
+Dietary Requirements: Specific feeding instructions, allergies, or dietary restrictions.
+Exercise Requirements: Notes on the dog's exercise needs, routines, or activities.
+Caregiver Notes: Any special notes from caregivers, such as specific handling instructions or preferences.
+6. Administrative and Financial Information
+Adoption Status: Whether the dog is available for adoption, sale, or is a permanent resident.
+Sale Price: If the dog is for sale, the price could be noted.
+Ownership History: Details of the current and previous owners, if applicable.
+Insurance Details: Information about any insurance policies covering the dog.
+Legal Documents: Any important legal documents related to ownership, breeding rights, or health.
+7. Competition and Performance Information
+Competition Records: Records of dog shows, agility trials, obedience competitions, or other events the dog has participated in.
+Titles and Awards: Any titles, awards, or certifications the dog has earned.
+Performance Scores: Scores or evaluations from competitions or tests (e.g., herding, hunting, scent work).
+8. Miscellaneous
+Photos: Images of the dog for identification, marketing, or promotional purposes.
+Notes: Any other free-text notes or comments that might be important for managing the dog's care, breeding, or sale.
+Why These Attributes Are Important for a Breeding Facility
+Breeding Decisions: Knowing a dog's pedigree, health status, and genetic testing results is crucial for making informed breeding decisions to ensure healthy offspring and maintain breed standards.
+Health Management: Keeping detailed medical records helps prevent genetic issues, manage hereditary conditions, and ensure the overall well-being of the dogs.
+Operational Efficiency: Information like the dog’s location, caregiver notes, and dietary requirements helps in daily care and management, making the facility run smoothly.
+Financial and Legal Compliance: Proper documentation of sales, ownership, and insurance ensures that the facility operates within legal parameters and maximizes its financial viability.
+Marketing and Customer Relations: Information like photos, awards, and competition records can be used for marketing purposes to attract buyers or adopters.

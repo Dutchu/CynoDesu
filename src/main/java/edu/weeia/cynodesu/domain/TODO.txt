@@ -1,0 +1,6 @@
+- tf this -> th:fragment="head(title, links)
+- idea.html
+- organizacja importów, skryptów itp. w pliki i fragmenty
+- message.properties? użycie zmiennych kontekstu aplikacji do konfiguracji wiadomości na widoku... Raczej niski priorytet
+
+- ZMIENIŁEM FOLDER DO FAVICON i default-dog-image. Znajdź ścieżkę która określa default dog image i jebnij do parametrów aplikacji, czycoś

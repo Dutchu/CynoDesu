@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.util.Optional;
 
 @Service
@@ -35,7 +34,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public UserSingUpResponseDTO signUp(UserSignUpDTO signUpRequest) {
+    public UserSingUpResponseDTO signUp(UserSignUpDto signUpRequest) {
 
         //Generate Hashed Password
         String hashedPassword;
@@ -87,7 +86,7 @@ public class AuthServiceImpl implements AuthService {
         // Set the Authentication object in the SecurityContextHolder
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        AppUserDetails appUser = appUserDetailsService.getCustomUserDetails(user.get());
+        AppUserDetails appUser = new AppUserDetails(user.get());
         System.out.println(appUser);
         // Return the token in the LoginResponseDTO
         return appUser;
@@ -95,7 +94,6 @@ public class AuthServiceImpl implements AuthService {
 
     public AppUserDetails getCustomUserDetails(AppUser user) {
 
-        return new AppUserDetails(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getAuthorities(),
-                user.isEnabled(), user.isAccountNonExpired(), user.isCredentialsNonExpired(), user.isAccountNonLocked());
+        return new AppUserDetails(user);
     }
 }

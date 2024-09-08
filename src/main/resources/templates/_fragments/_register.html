@@ -1,0 +1,80 @@
+<div th:fragment="modal">
+    <div th:id="registerModal" class="modal fade" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="registerModalLabel">Sign Up</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <div th:replace="~{_fragments/_register :: form}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="form">
+    <form th:action="@{/auth/signup}" th:object="${userSignUpForm}"
+          method="post" enctype="multipart/form-data"
+          hx-post="/auth/signup"
+          hx-target="#modalBody"
+          hx-on="htmx:afterOnLoad"
+          hx-swap="innerHTML"
+          onsubmit="return validatePasswords()">
+        <div class="mb-3">
+            <label for="username" class="form-label">Username</label>
+            <input type="text" class="form-control" id="username" name="username" th:field="*{username}" required/>
+            <div th:if="${#fields.hasErrors('username')}" th:errors="*{username}" class="text-danger"></div>
+        </div>
+        <div class="mb-3">
+            <label for="firstName" class="form-label">First Name</label>
+            <input type="text" class="form-control" id="firstName" name="firstName" th:field="*{firstName}" required/>
+            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="lastName" class="form-label">Last Name</label>
+            <input type="text" class="form-control" id="lastName" name="lastName" th:field="*{lastName}" required/>
+            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="text-danger"></div>
+        </div>
+
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Email address</label>
+            <input type="email" class="form-control" id="email" name="email" th:field="*{email}" required/>
+            <div th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="pwdPlainText" class="form-label">Password</label>
+            <input type="password" class="form-control" id="pwdPlainText" name="pwdPlainText" th:field="*{pwdPlainText}"
+                   required oninput="validatePasswords()"/>
+            <div th:if="${#fields.hasErrors('pwdPlainText')}" th:errors="*{pwdPlainText}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                   th:field="*{confirmPassword}" required oninput="validatePasswords()"/>
+            <div id="passwordError" class="text-danger"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Sign Up</button>
+    </form>
+    <script>
+        function validatePasswords() {
+            const password = document.getElementById('pwdPlainText').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const errorDiv = document.getElementById('passwordError');
+
+            if (password !== confirmPassword) {
+                errorDiv.textContent = "Passwords do not match!";
+                return false;
+            } else {
+                errorDiv.textContent = ""; // Clear the error message if passwords match
+                return true;
+            }
+        }
+    </script>
+</div>

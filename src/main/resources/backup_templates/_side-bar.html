@@ -1,0 +1,109 @@
+<div th:fragment="side-bar">
+    <!-- Sidebar -->
+    <!-- Sidebar -->
+    <nav id="sidebar" class="bg-dark border-right collapse show">
+        <div class="sidebar-header bg-primary text-white p-4">
+            <h3>Cynology Hub</h3>
+            <strong>CH</strong>
+        </div>
+
+        <div class="list-group list-group-flush">
+            <a href="/home" class="list-group-item list-group-item-action bg-dark text-white"><i
+                    class="fas fa-home"></i> Home</a>
+            <a class="list-group-item list-group-item-action bg-dark text-white"
+               sec:authorize="hasRole('ROLE_ADMIN')" href="/admin">
+                <i class="fas fa-trophy"></i>
+                Admin Dashboard</a>
+            <a href="/contests" class="list-group-item list-group-item-action bg-dark text-white"><i
+                    class="fas fa-trophy"></i> Contests</a>
+            <a href="/pedigrees" class="list-group-item list-group-item-action bg-dark text-white"><i
+                    class="fas fa-dog"></i> Pedigrees</a>
+            <a href="/profile" class="list-group-item list-group-item-action bg-dark text-white"><i
+                    class="fas fa-user"></i> Profile</a>
+            <a href="/logout" class="list-group-item list-group-item-action bg-dark text-white"><i
+                    class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+    </nav>
+</div>
+<!-- End content -->
+
+<!--    <!DOCTYPE html>-->
+<!--    <html lang="en">-->
+<!--    <head>-->
+<!--        <meta charset="UTF-8">-->
+<!--        <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--        <title>Closable Sidebar with Bootstrap</title>-->
+<!--        &lt;!&ndash; Include Bootstrap CSS and JS &ndash;&gt;-->
+<!--        <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">-->
+<!--        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>-->
+<!--        <style>-->
+<!--            .sidebar {-->
+<!--                width: 250px;-->
+<!--                position: fixed;-->
+<!--                top: 0;-->
+<!--                left: 0;-->
+<!--                height: 100%;-->
+<!--                background-color: #343a40; /* Dark background */-->
+<!--                padding: 20px;-->
+<!--                transition: transform 0.3s ease; /* Smooth transition */-->
+<!--            }-->
+<!--            .sidebar.hidden {-->
+<!--                transform: translateX(-100%); /* Slide out of view */-->
+<!--            }-->
+<!--            .sidebar a {-->
+<!--                color: #fff;-->
+<!--                text-decoration: none;-->
+<!--                display: block;-->
+<!--                margin: 15px 0;-->
+<!--            }-->
+<!--            .content {-->
+<!--                margin-left: 250px;-->
+<!--                transition: margin-left 0.3s ease; /* Smooth transition */-->
+<!--            }-->
+<!--            .content.shifted {-->
+<!--                margin-left: 0;-->
+<!--            }-->
+<!--            .close-btn {-->
+<!--                color: #fff;-->
+<!--                cursor: pointer;-->
+<!--                margin-bottom: 20px;-->
+<!--                display: inline-block;-->
+<!--            }-->
+<!--        </style>-->
+<!--    </head>-->
+<!--    <body>-->
+
+<!--    &lt;!&ndash; Sidebar &ndash;&gt;-->
+<!--    <div id="mySidebar" class="sidebar">-->
+<!--        <span class="close-btn" onclick="toggleSidebar()">&#9776; Close</span>-->
+<!--        <a href="#">Home</a>-->
+<!--        <a sec:authorize="hasRole('ROLE_USER')" href="/admin">User Dashboard</a>-->
+<!--        <a href="#">Profile</a>-->
+<!--        <a href="#">Messages</a>-->
+<!--        <a href="#">Settings</a>-->
+<!--        <a href="#">Logout</a>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Main content &ndash;&gt;-->
+<!--    <div id="mainContent" class="content">-->
+<!--        <button class="btn btn-primary m-3" onclick="toggleSidebar()">Open Sidebar</button>-->
+<!--        <div class="container">-->
+<!--            <h1>Main Content Area</h1>-->
+<!--            <p>Your main content goes here...</p>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <script>-->
+<!--        function toggleSidebar() {-->
+<!--            var sidebar = document.getElementById("mySidebar");-->
+<!--            var content = document.getElementById("mainContent");-->
+
+<!--            // Toggle the sidebar visibility-->
+<!--            sidebar.classList.toggle("hidden");-->
+<!--            content.classList.toggle("shifted");-->
+<!--        }-->
+<!--    </script>-->
+
+<!--    </body>-->
+<!--    </html>-->
+<!--</div>-->

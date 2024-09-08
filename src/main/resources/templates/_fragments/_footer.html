@@ -1,0 +1,48 @@
+<body>
+<div th:fragment="page-footer">
+    <footer class="footer text-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 th:text="#{app.footer.quickLinks}">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#about" class="text-white" th:text="#{app.about}">About Us</a></li>
+                        <li><a href="#contact" class="text-white" th:text="#{app.contact}">Contact Us</a></li>
+                        <li><a href="#" class="text-white" th:text="#{app.privacy}">Privacy Policy</a></li>
+                        <li><a href="#" class="text-white" th:text="#{app.terms}">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h5 th:text="#{app.footer.followUs}">Follow Us</h5>
+                    <a href="#" class="text-white">Facebook</a> |
+                    <a href="#" class="text-white">Instagram</a> |
+                    <a href="#" class="text-white">Twitter</a> |
+                    <a href="#" class="text-white">LinkedIn</a>
+                </div>
+                <div class="col-md-4">
+                    <h5 th:text="#{app.footer.newsletter}">Newsletter Signup</h5>
+                    <form>
+                        <div class="input-group">
+                            <input type="email" class="form-control" placeholder="Enter your email" aria-label="Email">
+                            <button class="btn btn-secondary" type="button">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="mt-3">
+                <p th:text="#{app.footer.copy}">&copy; 2024 Cynology Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</div>
+
+
+<th:block th:fragment="js-imports(scripts)">
+    <!-- Include Bootstrap JS -->
+    <script th:src="#{app.bootstrap.js.path}"></script>
+    <!-- we can pass in additional script if needed -->
+    <th:block th:replace="${scripts}"/>
+</th:block>
+
+
+</body>

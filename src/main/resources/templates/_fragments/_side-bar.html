@@ -1,0 +1,15 @@
+<div th:fragment="side-bar">
+    <div id="sidebar" class="sidebar">
+        <span class="close-btn" onclick="toggleSidebar()">&#9776; Close</span>
+        <a href="#">Home</a>
+        <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin">Admin Dashboard</a>
+        <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/review-dogs">Review Dogs</a>
+        <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/review-users">Review Users</a>
+        <a sec:authorize="hasRole('ROLE_ADMIN')" href="/admin/bootstrap">Bootstrap Data</a>
+        <a href="/home">Home</a>
+        <a href="#">Profile</a>
+        <a href="#">Messages</a>
+        <a href="#">Settings</a>
+        <a href="#">Logout</a>
+    </div>
+</div>

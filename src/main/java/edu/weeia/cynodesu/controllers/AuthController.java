@@ -1,36 +1,42 @@
 package edu.weeia.cynodesu.controllers;
 
-import edu.weeia.cynodesu.api.v1.model.LoginDTO;
-import edu.weeia.cynodesu.api.v1.model.LoginResponseDTO;
-import edu.weeia.cynodesu.api.v1.model.UserSignUpDTO;
-import edu.weeia.cynodesu.api.v1.model.UserSingUpResponseDTO;
-import edu.weeia.cynodesu.domain.AppUser;
+import edu.weeia.cynodesu.api.v1.model.UserSignUpDto;
+import edu.weeia.cynodesu.api.v1.model.UserSignUpForm;
 import edu.weeia.cynodesu.security.AppUserDetails;
 import edu.weeia.cynodesu.services.AuthService;
 import edu.weeia.cynodesu.services.UserSignUpValidator;
 import jakarta.validation.Valid;
+import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Locale;
+
 @Controller
-@Validated
 public class AuthController {
     private final AuthService authService;
     private final UserSignUpValidator userSignupValidator;
+    private final MessageSource messageSource;
+    private final SseController sseController;
 
-    public AuthController(AuthService authService, UserSignUpValidator userSignupValidator) {
+    public AuthController(AuthService authService, UserSignUpValidator userSignupValidator, MessageSource messageSource, SseController sseController) {
         this.authService = authService;
         this.userSignupValidator = userSignupValidator;
+        this.messageSource = messageSource;
+        this.sseController = sseController;
     }
+
 
     @PostMapping("/auth/success")
     public String authenticateUser(Model model, @AuthenticationPrincipal AppUserDetails principal) {
@@ -44,19 +50,42 @@ public class AuthController {
         return "_fragments/header :: headerbar";
     }
 
+    @InitBinder("signUpRequest")
+    protected void initBinder(WebDataBinder binder) {
+        binder.addValidators(userSignupValidator);
+    }
     @PostMapping("/auth/signup")
-    public ResponseEntity<UserSingUpResponseDTO> registerUser(@RequestBody @Valid UserSignUpDTO signUpRequest, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+    public String registerUser(
+            @ModelAttribute @Valid UserSignUpForm signUpRequest,
+            BindingResult bindingResult,
+            RedirectAttributes redirectAttributes,
+            Model model) {
 
-        //do custom validation along with the BeanValidation
         userSignupValidator.validate(signUpRequest, bindingResult);
 
-
         if (bindingResult.hasErrors()) {
-            return ResponseEntity.badRequest().body(new UserSingUpResponseDTO(null,false));
+            model.addAttribute("userSignUpForm", signUpRequest);
+            model.addAttribute("errors", bindingResult.getAllErrors());
+            return "_fragments/_register :: form";
         }
 
-        return ResponseEntity.ok().body(
-                authService.signUp(signUpRequest)
-        );
+        var validatedData = UserSignUpDto.validatedFromForm(signUpRequest);
+        var result = authService.signUp(validatedData);
+
+        if (result.success()) {
+            sseController.sendNotification("New User Created: " + result.id());
+            model.addAttribute("status", "success");
+            model.addAttribute("message", messageSource.getMessage("app.auth.registration.success", null, Locale.getDefault()));
+        } else {
+            model.addAttribute("status", "error");
+            model.addAttribute("message", messageSource.getMessage("app.auth.registration.fail", null, Locale.getDefault()));
+        }
+        return "_fragments/_message-box :: message";
+    }
+
+    @GetMapping("/signup")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new UserSignUpForm());
+        return "auth/signup";
     }
 }

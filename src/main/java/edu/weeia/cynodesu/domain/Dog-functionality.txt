@@ -1,0 +1,7 @@
+name - required user provided (Text field in th interface),
+breedingFacility - required user provided (drop list in the interface),
+content - optional user provided (Text field in the interface),
+icon - optional user provided (default image and image loading button in the interface),
+status - required server provided (Managed in admin window to approve dogs creation),
+attachedFiles - optional user provided (multiple file data possible to attach to a dog with browser functionality in UI),
+scores - optional server provided. Competition will own relation.

@@ -1,0 +1,4 @@
+Instant receivedDate - required server provided;
+String originalFileName - required user provided (by browser functionality in UI);
+String storedName - required user provided (by textField functionality in UI);
+FileGroup fileGroup - required server provided (ENUM based on what type of file is being uploaded);

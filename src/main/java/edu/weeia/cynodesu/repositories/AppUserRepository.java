@@ -25,6 +25,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     Optional<AppUser> findByIdAndActiveIsTrue(Long id);
 
     Page<AppUser> findAllByActiveIsTrue(Pageable pageable);
+    Page<AppUser> findAllByActiveIsFalse(Pageable pageable);
 
     Iterable<AppUser> findByFirstName(String personName);
 
@@ -42,4 +43,7 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     @Transactional(readOnly = true)
     boolean existsByUsername(String username);
+
+    @Transactional(readOnly = true)
+    boolean existsByEmail(String email);
 }

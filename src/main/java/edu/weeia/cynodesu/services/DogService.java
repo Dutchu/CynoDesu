@@ -1,14 +1,17 @@
 package edu.weeia.cynodesu.services;
 
-import edu.weeia.cynodesu.api.v1.model.CreateDogDTO;
-import edu.weeia.cynodesu.api.v1.model.DogPreviewDTO;
-import edu.weeia.cynodesu.api.v1.model.GetDogDTO;
+import edu.weeia.cynodesu.api.v1.model.*;
+import edu.weeia.cynodesu.domain.Breed;
 import edu.weeia.cynodesu.domain.Dog;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
+import java.util.Set;
+
 
 public interface DogService {
     List<GetDogDTO> getAllDogs();
@@ -17,15 +20,18 @@ public interface DogService {
     GetDogDTO createNewDog(String dogName);
     GetDogDTO deleteDogById(Long id);
 
-    List<GetDogDTO> getAllToReview(PageRequest createdDate);
+    DogDetailDto getDetails(Long id) ;
+    Page<DogPreviewDTO> getAllToReview(Pageable pageable);
 
-    List<GetDogDTO> previewAllByUser(PageRequest createdDate, Long id);
+    Page<DogPreviewDTO> previewAllByFacility(Long facilityId, Pageable pageable);
 
     GetDogDTO getDogById(Long id);
 
-    Page<DogPreviewDTO> previewAll(Pageable pageable);
+    SavedDogDTO createDog(Long facilityId, CreateDogDTO createDogDTO);
 
-    Dog createDog(CreateDogDTO articleDto);
+    List<Breed> getBreeds();
 
     Page<DogPreviewDTO> previewForPublicHomePage(Pageable pageable);
+
+    public boolean activateDogs(List<Long> dogsId);
 }

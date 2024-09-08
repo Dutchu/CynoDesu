@@ -1,0 +1,71 @@
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #343a40; /* Dark background */
+    padding: 20px;
+    transition: transform 0.3s ease; /* Smooth transition */
+    z-index: 2; /* Make sure it sits above other elements */
+}
+
+.sidebar.hidden {
+    transform: translateX(-100%); /* Slide out of view */
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    margin: 15px 0;
+}
+
+/* Navbar styles */
+.navbar {
+    background-color: #343a40; /* Dark background */
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Align content to the left */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1; /* Ensure navbar is below sidebar */
+    transition: margin-left 0.3s ease; /* Smooth transition */
+}
+
+.navbar .hamburger-icon {
+    margin-right: 20px; /* Space between the icon and the content */
+}
+
+/* Action section styles */
+.action-section {
+    margin-top: 60px; /* Slightly below the navbar */
+
+    transition: margin-left 0.3s ease; /* Smooth transition */
+}
+
+.action-section.collapsed {
+    margin-left: 0; /* Adjust for collapsed sidebar */
+}
+
+/* Content styles */
+.content {
+    margin-left: 250px;
+    padding: 10px;
+    min-height: calc(100vh - 60px); /* Adjust for navbar height */
+    transition: margin-left 0.3s ease; /* Smooth transition */
+}
+
+.content.collapsed {
+    margin-left: 0;
+}
+
+/* Reduce excessive spacing */
+.mt-sm-2 {
+    margin-top: 0 !important;
+}
+

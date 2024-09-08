@@ -18,20 +18,22 @@ public class AppUserDetailsService implements UserDetailsService {
 
     @Override
     public AppUserDetails loadUserByUsername(String username) {
-        Optional<AppUser> userFromDatabase = userService.findWithAuthoritiesByUsername(username);
-
-        AppUserDetails result = userFromDatabase
-                .map(this::getCustomUserDetails)
+        return userService.findWithAuthoritiesByUsername(username)
+                .map(AppUserDetails::new)
                 .orElseThrow(() -> new UsernameNotFoundException(" User with login:" + username + " was not found in the " + " database "));
-        System.out.println(result);
-        return result;
+//
+//        App result = userFromDatabase
+//                .map(() -> getCustomUserDetails())
+//                .orElseThrow(() -> new UsernameNotFoundException(" User with login:" + username + " was not found in the " + " database "));
+//        System.out.println(result);
+//        return new AppUserDetails(result);
     }
 
-    @Transactional(readOnly = true)
-    public AppUserDetails getCustomUserDetails(AppUser user) {
-
-        return new AppUserDetails(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getAuthorities(),
-                user.isEnabled(), user.isAccountNonExpired(), user.isCredentialsNonExpired(), user.isAccountNonLocked());
-    }
+//    @Transactional(readOnly = true)
+//    public AppUserDetails getCustomUserDetails(AppUser user) {
+//
+//        return new AppUserDetails(user.getId(), user.getUsername(), user.getEmail(), user.getPassword(), user.getFirstName(), user.getLastName(), user.getAuthorities(),
+//                user.isEnabled(), user.isAccountNonExpired(), user.isCredentialsNonExpired(), user.isAccountNonLocked());
+//    }
 
 }

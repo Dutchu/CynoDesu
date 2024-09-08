@@ -1,7 +1,7 @@
 package edu.weeia.cynodesu.services;
 
+import edu.weeia.cynodesu.api.v1.model.UserSignUpForm;
 import edu.weeia.cynodesu.repositories.AppUserRepository;
-import edu.weeia.cynodesu.api.v1.model.UserSignUpDTO;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -16,19 +16,23 @@ public class UserSignUpValidator implements Validator {
 
     @Override
     public boolean supports(Class clazz) {
-        return UserSignUpDTO.class.equals(clazz);
+        return UserSignUpForm.class.equals(clazz);
     }
 
     @Override
     public void validate(Object target, Errors errors) {
-        UserSignUpDTO toCreate = (UserSignUpDTO) target;
+        UserSignUpForm toCreate = (UserSignUpForm) target;
 
-        if (toCreate.pwdPlainText().toLowerCase().contains(toCreate.username().toLowerCase()) || toCreate.username().toLowerCase().contains(toCreate.pwdPlainText().toLowerCase())) {
-            errors.rejectValue("pwdPlaintext", "user.weakpwd", "Weak password, choose another");
+        if (toCreate.getPwdPlainText().toLowerCase().contains(toCreate.getUsername().toLowerCase()) || toCreate.getUsername().toLowerCase().contains(toCreate.getPwdPlainText().toLowerCase())) {
+            errors.rejectValue("pwdPlainText", "user.weakpwd", "Weak password, choose another");
         }
 
-        if (userRepository.existsByUsername(toCreate.username())) {
-            errors.rejectValue("username", "user.alreadyexists", "Username " + toCreate.username() + " already exists");
+        if (userRepository.existsByUsername(toCreate.getUsername())) {
+            errors.rejectValue("username", "user.alreadyexists", "Username " + toCreate.getUsername() + " already exists");
+        }
+
+        if (userRepository.existsByEmail(toCreate.getEmail())) {
+            errors.rejectValue("email", "email.alreadyexists", "Email " + toCreate.getEmail() + " already exists");
         }
     }
 

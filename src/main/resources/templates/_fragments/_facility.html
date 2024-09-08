@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<!-- File: templates/fragments/_createFacilityForm.html -->
+<div th:fragment="create-facility-form">
+    <!-- Bootstrap Modal -->
+    <div class="modal fade" id="createFacilityModal" tabindex="-1" aria-labelledby="createFacilityLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createFacilityLabel">Create New Facility</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form th:object="${createFacilityDTO}"
+                          method="post" enctype="multipart/form-data"
+                          hx-post="/facility/create"
+                          hx-target="#renderSpace"
+                          hx-swap="innerHTML"
+                          hx-on="htmx:afterRequest: toggleModal('createFacilityModal')">
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Facility Name</label>
+                            <input type="text" th:field="*{name}" class="form-control" id="name" required>
+                            <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="phoneNumber" class="form-label">Phone Number</label>
+                            <input type="text" th:fieldS="*{phoneNumber}" class="form-control" id="phoneNumber"
+                                   required>
+                            <span th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}"
+                                  class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" th:field="*{email}" class="form-control" id="email" required>
+                            <span th:if="${#fields.hasErrors('email')}" th:errors="*{email}" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="address" class="form-label">Address</label>
+                            <input type="text" th:field="*{address}" class="form-control" id="address" required>
+                            <span th:if="${#fields.hasErrors('address')}" th:errors="*{address}"
+                                  class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="registrationNumber" class="form-label">Registration Number</label>
+                            <input type="text" th:field="*{registrationNumber}" class="form-control"
+                                   id="registrationNumber"
+                                   required>
+                            <span th:if="${#fields.hasErrors('registrationNumber')}" th:errors="*{registrationNumber}"
+                                  class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label for="licenseInfo" class="form-label">License Information</label>
+                            <input type="text" th:field="*{licenseInfo}" class="form-control" id="licenseInfo">
+                        </div>
+                        <div class="mb-3">
+                            <label for="notes" class="form-label">Notes</label>
+                            <textarea th:field="*{notes}" class="form-control" id="notes" rows="3"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Facility Image</label>
+                            <input type="file" th:field="*{image}" class="form-control" id="image">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Create Facility</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="list(facilities, page)">
+    <div class="action-section">
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                data-bs-target="#createFacilityModal">
+            Create Facility
+        </button>
+    </div>
+    <div class="container py-5" id="facility-list">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!-- Iterate directly over facilities Set -->
+            <div class="col" th:each="facility : ${facilities}">
+                <div class="card h-100 text-bg-dark border-light">
+                    <img th:src="@{'data:image/png;base64,' + ${facility.icon}}" class="card-img-top"
+                         alt="Facility Icon" style="height: 180px; object-fit: cover;">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title" th:text="${facility.name}"></h5>
+                        <p class="card-text mb-4" th:text="${facility.address}"></p>
+                        <!-- HTMX request to fetch dogs by facility ID -->
+                        <!-- Target where the dog list will be rendered -->
+                        <!-- Swap the content inside the target -->
+                        <button class="btn btn-primary mt-auto"
+                                th:attr="hx-get=@{/facility/} + ${facility.id}"
+                                hx-target="#renderSpace"
+                                hx-swap="innerHTML">
+                            View Dogs for <span th:text="${facility.name}">Facility Name</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Pagination -->
+        <div class="flex-box" th:replace="~{_fragments/_utils :: pagination('/facility/list', ${facilities}, ${_page_begin}, ${_page_end}, ${pageNumbers})}"></div>
+    </div>
+</div>
+</body>

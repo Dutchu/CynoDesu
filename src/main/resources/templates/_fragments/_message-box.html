@@ -1,0 +1,16 @@
+
+<!-- toast.html -->
+<div th:fragment="message(status, message)">
+    <!-- Toast Container -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1050;">
+        <!-- Toast Element -->
+        <div id="serverToast" class="toast align-items-center" th:classappend="${status == 'success'} ? 'text-bg-success' : 'text-bg-danger'" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <span th:text="${message}">Default message</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+</div>

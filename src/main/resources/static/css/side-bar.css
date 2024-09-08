@@ -1,0 +1,52 @@
+/* Sidebar styles */
+.sidebar {
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #343a40; /* Dark background */
+    padding: 20px;
+    transition: transform 0.3s ease; /* Smooth transition */
+}
+
+.sidebar.hidden {
+    transform: translateX(-100%); /* Slide out of view */
+}
+
+.sidebar a {
+    color: #fff;
+    text-decoration: none;
+    display: block;
+    margin: 15px 0;
+}
+
+/* Content styles */
+.content {
+    margin-left: 250px;
+    transition: margin-left 0.3s ease; /* Smooth transition */
+    min-height: calc(100vh - 56px); /* Adjust for footer */
+    padding-top: 56px; /* Adjust for navbar height */
+}
+
+.content.shifted {
+    margin-left: 0;
+}
+
+/* Footer styles */
+.footer {
+    background-color: #f8f9fa;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Close button styles */
+.close-btn {
+    color: #fff;
+    cursor: pointer;
+    margin-bottom: 20px;
+    display: inline-block;
+}

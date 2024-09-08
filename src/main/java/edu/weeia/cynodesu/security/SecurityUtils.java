@@ -71,4 +71,6 @@ public final class SecurityUtils {
         return authentication != null && authentication.getAuthorities().stream().anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals(authority));
     }
 
+
+
 }

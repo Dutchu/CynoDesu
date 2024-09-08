@@ -1,6 +1,7 @@
 package edu.weeia.cynodesu.security;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import edu.weeia.cynodesu.domain.AppUser;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -17,19 +18,19 @@ public class AppUserDetails extends User {
 
     private Long id;
     private String firstName;
-
     private String lastName;
     private String email;
+    private final AppUser appUser;
 
-    public AppUserDetails(Long id, String userName, String email, String password, String firstName, String lastName, Collection<Authority> authorities,
-                          boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked) {
+//    public AppUserDetails(Long id, String userName, String email, String password, String firstName, String lastName, Collection<Authority> authorities,
+//                          boolean enabled, boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked, AppUser appUser) {
+public AppUserDetails(AppUser appUser) {
+        super(appUser.getUsername(), appUser.getPassword(), appUser.isEnabled(), appUser.isAccountNonExpired(), appUser.isCredentialsNonExpired(), appUser.isAccountNonLocked(), appUser.getAuthorities());
 
-        super(userName, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
-
-        this.id = id;
-        this.firstName = firstName;
+    this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.appUser = appUser;
     }
 
     @JsonIgnore

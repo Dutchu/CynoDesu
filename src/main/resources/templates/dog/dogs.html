@@ -28,15 +28,15 @@
                 <input id="new-dog" type="text" name="new-dog" class="form-control">
             </div>
             <div class="form-group pmd-textfield pmd-textfield-outline pmd-textfield-floating-label col-md-4">
-                <label for="owner-select">Owner</label>
-                <select id="owner-select" class="form-control">
-                    <option th:each="owner : ${owners}" th:value="${owner.firstName}" th:text="${owner.firstName}"></option>
+                <label for="breedingFacility-select">Owner</label>
+                <select id="breedingFacility-select" class="form-control">
+                    <option th:each="breedingFacility : ${owners}" th:value="${breedingFacility.firstName}" th:text="${breedingFacility.firstName}"></option>
                 </select>
             </div>
         </div>
         <button
                 hx-post="http://localhost:8080/api/v1/dogs"
-                hx-include="#new-dog, #owner-select"
+                hx-include="#new-dog, #breedingFacility-select"
                 hx-target=".dogs-list"
                 type="submit" class="btn pmd-ripple-effect btn-primary">
             Create
@@ -50,14 +50,14 @@
                 <thead>
                 <tr>
                     <th>Dog's name</th>
-                    <th>Dog's owner</th>
+                    <th>Dog's breedingFacility</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="dog : ${dogs}">
                     <td th:text="${dog.getName()}"></td>
-                    <td th:text="${dog.owner.firstName}"></td>
+                    <td th:text="${dog.breedingFacility.firstName}"></td>
                     <td>
                         <button type="submit" class="btn btn-primary"
                                 th:attr="hx-delete=@{http://localhost:8080/api/v1/dogs/{id}(id=${dog.id})}"

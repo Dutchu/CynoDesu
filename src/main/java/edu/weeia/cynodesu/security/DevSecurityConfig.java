@@ -1,8 +1,6 @@
 package edu.weeia.cynodesu.security;
 
 import edu.weeia.cynodesu.configuration.Constants;
-import edu.weeia.cynodesu.configuration.LoggingFilter;
-import jakarta.servlet.ServletContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -13,22 +11,23 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.access.AccessDeniedHandlerImpl;
+import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @EnableWebSecurity
 @Configuration
-@Profile("dev")
+@Profile({"dev", "default"})
 public class DevSecurityConfig {
+
     CustomSuccessHandler successHandler;
+
+
     DevSecurityConfig(CustomSuccessHandler successHandler) {
         this.successHandler = successHandler;
     }
@@ -39,10 +38,15 @@ public class DevSecurityConfig {
             "/h2-console/**",
             "/webjars/**",
             "/static/**",
+            "/images/**",          // <-- Add this line to whitelist images
+            "/css/**",             // <-- Add this line to whitelist CSS files if needed
+            "/js/**",              // <-- Add this line to whitelist JS files if needed
             "/", //landing page is allowed for all
             "/landing",
+            "/signup",
             "/favicon.ico",
             "/dog/**",
+            "/error/**",
             "/index"
     };
 
@@ -54,16 +58,23 @@ public class DevSecurityConfig {
                 .headers(headers -> headers
                         .frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .authorizeHttpRequests(ah -> ah
-                                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                                .requestMatchers(AUTH_WHITELIST).permitAll()
-                                .requestMatchers("/landing").permitAll()
-                                .requestMatchers("/admin/**").hasAuthority(Constants.ROLE_ADMIN)
-                                .requestMatchers("/user/**").hasAuthority(Constants.ROLE_USER)
-                                .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/api/**").authenticated())
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers(AUTH_WHITELIST).permitAll()
+                        .requestMatchers("/landing").permitAll()
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/api/**").authenticated()
+                        .requestMatchers("/home").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
+                        .requestMatchers("/sse/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
+                        .requestMatchers("/dog/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
+                        .requestMatchers("/facilities/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
+                        .requestMatchers("/facility/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
+                        .requestMatchers("/admin/**").hasAuthority(Constants.ROLE_ADMIN)
+                        .requestMatchers("/user/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER))
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/auth/login")
+                        .loginPage("/")
+                        .loginProcessingUrl("/auth/login")
                         .successHandler(successHandler)
+                        .failureHandler(new SimpleUrlAuthenticationFailureHandler("/?error=true"))
                         .permitAll())
                 .logout(logout -> logout
                         .logoutUrl("/auth/logout") // the URL on which a POST will trigger logout
@@ -85,4 +96,10 @@ public class DevSecurityConfig {
         return configuration.getAuthenticationManager();
     }
 
+    //TODO: IMPORTANT TO UNDERSTAND HOW THIS WORK
+    public AccessDeniedHandler accessDeniedHandler() {
+        AccessDeniedHandlerImpl accessDeniedHandler = new AccessDeniedHandlerImpl();
+        accessDeniedHandler.setErrorPage("/error/403");
+        return accessDeniedHandler;
+    }
 }

@@ -1,27 +1,29 @@
 package edu.weeia.cynodesu.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import edu.weeia.cynodesu.configuration.Constants;
 import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
+import org.hibernate.annotations.*;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.Collection;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Data
-public class AppUser extends BaseEntity implements UserDetails {
+@Getter
+@Setter
+@Table(name = "APP_USER")
+public class AppUser extends BaseAuditingEntity implements UserDetails {
 
-    @Basic(fetch = jakarta.persistence.FetchType.LAZY)
+//    @Basic(fetch = jakarta.persistence.FetchType.LAZY)
     @Lob
+    @JsonIgnore
     byte[] avatar;
 
     @Size(max = 30)
@@ -41,13 +43,16 @@ public class AppUser extends BaseEntity implements UserDetails {
 
     @JoinTable(
             name = "APP_USER_AUTHORITY",
-            joinColumns = @JoinColumn(name = "app_user_id"),
+            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = @JoinColumn(name = "authority_name", referencedColumnName = "name")
     )
     @ManyToMany(fetch = FetchType.LAZY)
     @Fetch(FetchMode.SUBSELECT)
     @BatchSize(size = Constants.BATCH_SIZE)
     private Set<Authority> authorities = new HashSet<>();
+
+    @ManyToMany(mappedBy = "users")
+    private Set<BreedingFacility> breedingFacilities = new HashSet<>();
 
     @Column(nullable = false)
     private boolean active = false;

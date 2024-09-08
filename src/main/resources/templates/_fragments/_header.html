@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      xmlns:th="http://www.thymeleaf.org" lang="eng">
+
+<head th:fragment="head(title, links)">
+
+    <!-- Use the property for the title -->
+    <title th:replace="${title}">Page Title</title>
+
+    <!-- Include additional links -->
+    <th:block th:replace="${links}"/>
+
+    <!-- Include favicon -->
+    <link th:href="#{app.favicon.path}" rel="icon" type="image/x-icon">
+
+    <!-- Include custom CSS -->
+    <link th:href="#{app.custom.css.path}" rel="stylesheet">
+
+    <!-- Include Bootstrap CSS -->
+    <link th:href="#{app.bootstrap.css.path}" rel="stylesheet">
+
+
+</head>
+<body>
+<div th:fragment="navbar">
+    <header class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#" th:text="#{app.title}">Cynology Hub</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#home" th:text="#{app.home}">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about" th:text="#{app.about}">About Us</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#farms" th:text="#{app.farms}">Dog Farms
+                        Directory</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#competitions" th:text="#{app.competitions}">Competitions</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#testimonials" th:text="#{app.testimonials}">Testimonials</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#contact" th:text="#{app.contact}">Contact Us</a>
+                    </li>
+                    <!-- Link to open the Sign Up modal -->
+                    <li class="nav-item">
+                        <a class="btn btn-primary ms-2" href="#" data-bs-toggle="modal" data-bs-target="#registerModal"
+                           th:text="#{app.signup.button}">Sign Up Button</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-secondary ms-2" href="#" data-bs-toggle="modal" data-bs-target="#loginModal"
+                           th:text="#{app.login.button}">Log In Button</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+</div>
+</body>

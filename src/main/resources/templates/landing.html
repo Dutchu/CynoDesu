@@ -1,127 +1,133 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
-<head th:replace="~{_fragments/header :: head(~{:: title}, ~{:: .custom-link})}">
-    <title>Article App - HOME</title>
-    <!-- we can do the following to add extra css on this page -->
-    <!--    <link class="custom-link" th:href="@{/static/css/some-custom-this-page-only.css}"/>-->
-    <link th:href="@{/webjars/bootstrap/5.3.3/css/bootstrap.min.css}" rel="stylesheet">
-    <script th:src="@{/webjars/bootstrap/5.3.3/js/bootstrap.bundle.min.js}"></script>
-    <script src="https://unpkg.com/htmx.org@1.9.10"
-            integrity="sha384-D1Kt99CQMDuVetoL1lrYwg5t+9QdHe7NLX/SoJYkXDFfX37iInKRy5xLSi8nO7UC"
-            crossorigin="anonymous"></script>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head th:replace="~{_fragments/_header :: head(~{::title}, ~{ :: .custom-link})}">
+    <!-- Pass this page's name to header -->
+    <title th:text="#{app.title}"></title>
+    <!-- Pass this page's specific styling to header -->
+    <link class="custom-link" th:href="@{/static/css/some-custom-this-page-only.css}"/>
 </head>
 <body>
 
-<div th:replace="~{_fragments/header :: headerbar}"></div>
+<!-- Header -->
+<div th:replace="~{_fragments/_header :: navbar}"></div>
 
+<!--<div th:replace="_fragments/_message-box :: message(status, message)"></div>-->
+ <div id="message-container"></div>
 
-<div class="container">
-
-    <div th:if="${param.logout} != null">
-        <div class="alert alert-success" role="alert">
-            <span>You have been signed out</span>
-        </div>
+<!-- Hero Section -->
+<section id="home" class="hero text-center d-flex align-items-center justify-content-center">
+    <div class="container">
+        <h1 th:text="#{app.tagline}">Connecting Dog Enthusiasts with the Best Farms and Competitions</h1>
+        <p th:text="#{app.subtext}">Discover top-rated dog farms, track competitions, and join a community of passionate dog lovers.</p>
+        <a href="#signup" class="btn btn-primary btn-lg" data-bs-toggle="modal" data-bs-target="#registerModal" th:text="#{app.signup.button}">Join Our Community</a>
+        <a href="#about" class="btn btn-outline-light btn-lg ms-2" th:text="#{app.learnmore.button}">Learn More</a>
     </div>
+</section>
 
-    <div th:if="${param.success} != null">
-        <div class="alert alert-success" role="alert">
-            <span th:text="${success}"></span>
-        </div>
-    </div>
-
-    <div class="card-deck mb-3">
-        <div class="px-3 py-3  mx-auto">
-
-
-            <div sec:authorize="isAuthenticated()">
-                <form action="#" method="post" th:action="@{/dog/add}" th:object="${dog}"
-                      enctype="multipart/form-data">
-                    <div th:replace="~{dog/_dogs :: dog-editor}"></div>
-
-                    <button class="btn btn-primary btn-sm btn-block" type="submit" id="postArticle-btn">
-                        Post Article
-                    </button>
-                </form>
-                <hr/>
+<!-- Features Section -->
+<section id="about" class="section text-center">
+    <div class="container">
+        <h2 th:text="#{app.features.title}">Why Choose Us?</h2>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <h4 th:text="#{app.features.trackFarms}">Track Top Dog Farms</h4>
+                <p th:text="#{app.features.trackFarms.desc}">Explore and connect with the best dog farms worldwide.</p>
             </div>
-
-            <h1 class="text-center" style="margin-top: 20px; margin-bottom: 20px;"
-            >Keep your dogs in order!</h1>
-            <h2 class="text-center" style="margin-top: 20px; margin-bottom: 20px;">
-                <a href="" th:href="@{/static}">Home</a>
-            </h2>
-
-            <section class="bg-light">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#loginModal">
-                    Login
-                </button>
-                <div id="loginModal" class="modal fade" tabindex="-1" aria-labelledby="loginModalLabel"
-                     aria-hidden="true">
-                    <!-- Modal content -->
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="loginForm"
-                                      method="post"
-                                      hx-post="/auth/login"
-                                      hx-trigger="submit"
-                                      hx-target="#headerbar"
-                                      hx-swap="outerHTML">
-                                    <!-- Form fields -->
-                                    <div class="form-group">
-                                        <label for="username">Username</label>
-                                        <input type="text" class="form-control" id="username" name="username" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="password">Password</label>
-                                        <input type="password" class="form-control" id="password" name="password"
-                                               required>
-                                    </div>
-                                    <!--                                            type="submit" class="btn btn-primary"-->
-                                    <button type="submit" class="btn pmd-ripple-effect btn-primary">
-                                        Submit
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-
-            <th:block th:each="dog : ${dogs}">
-                <th:block th:replace="~{dog/_dogs :: dog-preview-box}">
-
-                </th:block>
-            </th:block>
-
-
-            <th:block
-                    th:replace="~{_fragments/_utils :: pagination(${dogs},  ${_page_begin}, ${_page_end})}">
-
-            </th:block>
-
-            <div th:if="${dogs.getTotalElements() ==0}">
-                <div class="alert alert-warning" role="alert">
-                    <span>No articles available.</span>
-                </div>
+            <div class="col-md-4">
+                <h4 th:text="#{app.features.competitions}">Stay Updated on Competitions</h4>
+                <p th:text="#{app.features.competitions.desc}">Get real-time updates on upcoming dog competitions and events.</p>
+            </div>
+            <div class="col-md-4">
+                <h4 th:text="#{app.features.community}">Exclusive Community Access</h4>
+                <p th:text="#{app.features.community.desc}">Join forums, attend webinars, and connect with fellow dog enthusiasts.</p>
             </div>
         </div>
     </div>
+</section>
 
-    <div th:replace="~{_fragments/footer :: page-footer}" th:remove="tag"></div>
+<!-- Dog Farms Directory Section -->
+<section id="farms" class="section bg-light text-center">
+    <div class="container">
+        <h2>Explore Dog Farms</h2>
+        <p>Search for dog farms based on breed, location, and reputation.</p>
+        <a href="#" class="btn btn-primary">Browse Farms</a>
+    </div>
+</section>
 
+<!-- Upcoming Competitions Section -->
+<section id="competitions" class="section text-center">
+    <div class="container">
+        <h2>Upcoming Dog Competitions</h2>
+        <p>Don’t miss out on the action! See what’s happening in the dog competition world.</p>
+        <a href="#" class="btn btn-primary">View Competitions</a>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section id="testimonials" class="testimonials section text-center">
+    <div class="container">
+        <h2>What Our Users Say</h2>
+        <div class="row mt-4">
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p>"Cynology Hub connected us with the best breeders. It's a game-changer!"</p>
+                    <footer class="blockquote-footer">John Doe</footer>
+                </blockquote>
+            </div>
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p>"A fantastic community for dog enthusiasts. Highly recommend!"</p>
+                    <footer class="blockquote-footer">Jane Smith</footer>
+                </blockquote>
+            </div>
+            <div class="col-md-4">
+                <blockquote class="blockquote">
+                    <p>"I love the competition tracking feature. It's super convenient."</p>
+                    <footer class="blockquote-footer">Sarah Lee</footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section id="signup" class="section text-center bg-primary text-white">
+    <div class="container">
+        <h2>Ready to Dive In?</h2>
+        <p>Sign up now and get started on your journey in the world of dog breeding and competitions.</p>
+        <a class="btn btn-primary ms-2" href="#" data-bs-toggle="modal" data-bs-target="#registerModal"
+           th:text="#{app.signup.button}">Sign Up</a>
+        <a href="#login" class="btn btn-light btn-lg ms-2">Log In</a>
+    </div>
+</section>
+
+<!-- Contact Us Section -->
+<section id="contact" class="section text-center">
+    <div class="container">
+        <h2>Contact Us</h2>
+        <p>Have questions? We'd love to hear from you!</p>
+        <a href="#" class="btn btn-primary">Get in Touch</a>
+    </div>
+</section>
+
+<!-- Include the register-form fragment -->
+<div th:replace="~{_fragments/_register :: modal}"></div>
+
+<!-- Include the register-form fragment -->
+<div th:replace="~{_fragments/_login-form :: login-form}"></div>
+
+<!-- Include the footer fragment -->
+<div th:replace="~{_fragments/_footer :: page-footer}"></div>
+
+<!-- Include scripts for page -->
+<div th:replace="~{_fragments/_footer :: js-imports(~{::.custom-script})}">
+    <!-- include some custom-made js for this page in generic footer -->
+    <script class="custom-script" th:src="@{/static/js/side-bar.js}"></script>
 </div>
 
-<div th:replace="~{_fragments/footer :: js-imports(~{::.custom-script})}">
-    <script class="custom-script" th:src="@{/static/js/custom.js}"></script>
-</div>
+<script th:src="@{/js/signup.js}"></script>
+<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </body>
 </html>

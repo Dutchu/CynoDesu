@@ -1,10 +1,19 @@
 <!DOCTYPE html>
-<html lang="eng">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Cyno-Desu</title>
+    <title>Landing Page</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
 </head>
 <body>
-Cyno-Desu
+<div th:replace="layout/_header :: header"></div>
+<div>
+    <h1>Welcome to DogApp!</h1>
+    <button th:onclick="'showRegisterModal()'">Register</button>
+    <button th:onclick="'showLoginModal()'">Log In</button>
+</div>
+<div th:replace="auth/register :: registerModal"></div>
+<div th:replace="auth/login :: loginModal"></div>
+<div th:replace="layout/_footer :: footer"></div>
+<script th:src="@{/js/modal.js}"></script>
 </body>
 </html>

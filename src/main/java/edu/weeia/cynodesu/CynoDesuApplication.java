@@ -8,6 +8,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Arrays;
@@ -25,7 +27,7 @@ public class CynoDesuApplication {
 				Access URLs:
 				                ----------------------------------------------------------
 				                \tLocal: \t\t\thttp://localhost:%s
-				                \tExternal: \t\thttp://%s:%s
+				                \tExternal: \t\thttps://%s:%s
 				                \tEnvironment: \t%s
 				                ----------------------------------------------------------""",
 

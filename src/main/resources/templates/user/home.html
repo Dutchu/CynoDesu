@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="~{_fragments/_header :: head(~{::title}, ~{ :: .custom-link})}">
+    <!-- Pass this page's name to header -->
+    <title th:text="#{app.homepage.title} + ${principal.getUsername()}">User Home Page</title>
+    <!-- Pass this page's specific styling to header -->
+    <link class="custom-link" th:href="@{/static/css/some-custom-this-page-only.css}"/>
+    <!--    <link th:href="@{/css/side-bar.css}" rel="stylesheet" class="custom-link">-->
+    <link th:href="@{/css/home.css}" rel="stylesheet" class="custom-link">
+</head>
+<body>
+<!-- Sidebar -->
+<div th:replace="~{_fragments/_side-bar :: side-bar}"></div>
+
+<!-- Page Content -->
+
+
+<div id="message-container">
+    <!-- This will hold the toast or any message from the server -->
+</div>
+
+<!-- Navigation Bar -->
+<nav class="navbar navbar-dark bg-dark mb-3" id="navbar">
+    <div class="container-fluid">
+        <button class="navbar-toggler" type="button" id="hamburger-btn" onclick="toggleSidebar()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <button type="submit" class="btn btn-primary" id="backButton">Return</button>
+    </div>
+</nav>
+
+
+<!--Initially we want Top level item from a tree in form of BreedingFacility -->
+<!-- Here are injected collections of Breeding Facilities and Dogs -->
+<div id="renderSpace" class="content">
+    <div hx-get="/facility/list" hx-trigger="load" hx-target="#renderSpace" hx-swap="innerHTML"> Load
+        Facilities
+    </div>
+</div>
+
+<!-- Include the form modals -->
+<div th:replace="~{_fragments/_facility :: create-facility-form}"></div>
+<!--        Can't ready dog form because it's depended on facility -->
+<!--        <div th:replace="~{_fragments/_dog :: create-dog-form}"></div>-->
+
+
+<!-- Include the footer fragment-->
+<div th:replace="~{_fragments/_footer :: page-footer}" th:remove="tag"></div>
+
+<!-- Include scripts for page -->
+<th:block th:replace="~{_fragments/_footer :: js-imports(~{::.custom-script})}">
+    <!-- include some custom-made js for this page in generic footer -->
+    <script class="custom-script" th:src="@{/static/js/side-bar.js}"></script>
+</th:block>
+
+<script>
+    // Function to show the toast
+    function showToast() {
+        const toastElement = document.getElementById('serverToast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+    }
+</script>
+
+
+<script th:src="@{/js/close-modal.js}"></script>
+<script th:src="@{/js/back-button.js}"></script>
+<script th:src="@{/js/validation-error.js}"></script>
+<!--<script th:src="@{/js/side-bar.js}"></script>-->
+
+<!--SIDEBAR-->
+<script th:src="@{/js/side-bar.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+<!-- jQuery for bootstrap select and toggle modal like create-forms -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
+</html>

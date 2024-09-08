@@ -22,6 +22,7 @@ public class ReceivedFile {
 
     String storedName;
 
+    //TODO: Look into possibility to make it configurable from app.properties
     @Enumerated(EnumType.STRING)
     FileGroup fileGroup;
 
@@ -34,6 +35,6 @@ public class ReceivedFile {
 
     public enum FileGroup {
         NOTE_ATTACHMENT,
-        //add other
+        PICTURE
     }
 }

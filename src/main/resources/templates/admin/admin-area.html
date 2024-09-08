@@ -1,3 +1,86 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<head th:replace="~{admin/_header :: head(~{::title}, ~{ :: .custom-link})}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{app.admin.title.dashboard}">Administrator's Dashboard</title>
+    <!-- Include custom CSS correctly -->
+    <link th:href="@{/css/side-bar.css}" rel="stylesheet" class="custom-link">
+    <!-- Corrected FontAwesome and HTMX CDN Links -->
+    <link th:href="#{app.font.awesome.css.cdn}" rel="stylesheet" class="custom-link">
+    <script th:src="#{app.htmx.cdn}" class="custom-link"></script>
+    <!-- Include favicon -->
+    <link th:href="#{app.favicon.path}" rel="icon" type="image/x-icon" class="custom-link">
+    <!-- Include Bootstrap CSS -->
+    <link th:href="#{app.bootstrap.css.path}" rel="stylesheet" class="custom-link">
+
+    <style>
+        .alerts-container {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+    </style>
+</head>
+<body>
+
+<div class="d-flex">
+
+    <!-- Sidebar -->
+    <div th:replace="~{_fragments/_side-bar :: side-bar}"></div>
+
+    <!-- Toast message container -->
+    <div id="message-container">
+        <!-- This will hold the toast or any message from the server -->
+    </div>
+
+    <div class="alerts-container" id="alertsContainer">
+        <!-- Alerts will be dynamically appended here -->
+    </div>
+
+    <!-- Navbar toggle button for sidebar -->
+    <button type="button" id="sidebarCollapse" class="btn btn-primary mb-4" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Page Content -->
+    <div id="mainContent" class="content p-4">
+        <h2>Alerts to review</h2>
+        <!-- Form to send selected dogs -->
+    </div>
+</div>
+
+<!-- Include the modal fragment for detailed views -->
+<div th:replace="~{admin/_detail :: dog-detail}"></div>
+
+<!-- Include Bootstrap JS (Optional, for Bootstrap features that require JavaScript) -->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+
+<!--<script th:href="#{app.htmx.cdn}"></script>-->
+<script src="https://unpkg.com/htmx.org@1.9.2"></script>
+<script type="text/javascript" th:src="#{app.htmx.cdn}"></script>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="/js/alerts.js"></script>
+<script src="/js/side-bar.js"></script>
+
+<script>
+    // Function to show the toast
+    function showToast() {
+        const toastElement = document.getElementById('serverToast');
+        if (toastElement) {
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        }
+    }
+</script>
+
+</body>
+</html>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>

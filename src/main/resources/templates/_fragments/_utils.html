@@ -4,52 +4,64 @@
 
 <body>
 
-<th:block th:fragment="pagination(pagedObject, begin, end)">
+<th:block th:fragment="pagination(path, pagedObject, begin, end, pageNumbers)">
 
     <!-- works with org.springframework.data.domain.Page<pagedObject>, -->
-
-    <div th:if="${pagedObject.getTotalPages() != 1}" class="form-group col-md-11 pagination-centered">
-        <ul class="pagination">
-            <!-- page number start with 0, totalPages returns actual number of pages -->
-            <li th:classappend="${pagedObject.getNumber() == 0} ? disabled" class="page-item">
-                <a class="page-link" th:href="@{''(size=${pagedObject.getSize()}, page=0)}">&laquo;</a>
-            </li>
-            <li th:classappend="${pagedObject.getNumber() == 0} ? disabled" class="page-item">
-                <a class="page-link"
-                   th:href="@{''(size=${pagedObject.getSize()}, page=${pagedObject.getNumber() -1})}">&larr;</a>
-            </li>
-            <li class="page-item"
-                th:classappend="${i==pagedObject.getNumber()+1} ? disabled"
-                th:each="i : ${#numbers.sequence(begin,  end)} ">
-                <a class="page-link"
-                   th:href="@{''(size=${pagedObject.getSize()}, page=${i -1})}" th:text="${i}"></a>
-            </li>
-            <li th:classappend="${pagedObject.getNumber() + 1 == pagedObject.getTotalPages()} ? disabled"
-                class="page-item">
-                <a class="page-link"
-                   th:href="@{''(size=${pagedObject.getSize()}, page=${pagedObject.getNumber() + 1})}">&rarr;</a>
-            </li>
-            <li th:classappend="${pagedObject.getNumber() + 1 == pagedObject.getTotalPages()} ? disabled"
-                class="page-item">
-                <a class="page-link"
-                   th:href="@{''(size=${pagedObject.getSize()}, page=${pagedObject.getTotalPages()-1})}">&raquo;</a>
-            </li>
-        </ul>
-
-        <p class="text-muted small">
-            Showing page <span th:text="${pagedObject.getNumber() +1}"></span> of <span
-                th:text="${pagedObject.getTotalPages()}"></span>.
-            Total: <span th:text="${pagedObject.getTotalElements()}"></span>.
-
-        </p>
-    </div>
-
-
     <div th:if="${pagedObject.getTotalElements() ==0}">
         <div class="alert alert-warning" role="alert">
             <span>No items available.</span>
         </div>
     </div>
+
+    <!-- Pagination -->
+    <div th:if="${pagedObject.getTotalPages() > 0}" class="form-group col-md-11 pagination-centered">
+        <ul class="pagination">
+            <!-- First Page Button -->
+            <li th:classappend="${pagedObject.getNumber() == 0} ? 'disabled'" class="page-item">
+                <a class="page-link"
+                   th:attr="hx-get=|${path}?size=${pagedObject.getSize()}&page=0|"
+                   hx-target="#renderSpace" hx-swap="innerHTML">&laquo;</a>
+            </li>
+
+            <!-- Previous Page Button -->
+            <li th:classappend="${pagedObject.getNumber() == 0} ? 'disabled'" class="page-item">
+                <a class="page-link"
+                   th:attr="hx-get=|${path}?size=${pagedObject.getSize()}&page=${pagedObject.getNumber() - 1}|"
+                   hx-target="#renderSpace" hx-swap="innerHTML">&larr;</a>
+            </li>
+
+            <!-- Numbered Page Buttons -->
+            <li class="page-item"
+                th:each="i : ${#numbers.sequence(begin, end)}"
+                th:classappend="${i == pagedObject.getNumber() + 1} ? 'disabled'">
+                <a class="page-link"
+                   th:attr="hx-get=|${path}?size=${pagedObject.getSize()}&page=${i - 1}|"
+                   th:text="${i}" hx-target="#renderSpace" hx-swap="innerHTML"></a>
+            </li>
+
+            <!-- Next Page Button -->
+            <li th:classappend="${pagedObject.getNumber() + 1 == pagedObject.getTotalPages()} ? 'disabled'" class="page-item">
+                <a class="page-link"
+                   th:attr="hx-get=|${path}?size=${pagedObject.getSize()}&page=${pagedObject.getNumber() + 1}|"
+                   hx-target="#renderSpace" hx-swap="innerHTML">&rarr;</a>
+            </li>
+
+            <!-- Last Page Button -->
+            <li th:classappend="${pagedObject.getNumber() + 1 == pagedObject.getTotalPages()} ? 'disabled'" class="page-item">
+                <a class="page-link"
+                   th:attr="hx-get=|${path}?size=${pagedObject.getSize()}&page=${pagedObject.getTotalPages() - 1}|"
+                   hx-target="#renderSpace" hx-swap="innerHTML">&raquo;</a>
+            </li>
+        </ul>
+
+        <!-- Pagination Information -->
+        <p class="text-muted small">
+            Showing page <span th:text="${pagedObject.getNumber() + 1}"></span> of
+            <span th:text="${pagedObject.getTotalPages()}"></span>.
+            Total: <span th:text="${pagedObject.getTotalElements()}"></span>.
+        </p>
+    </div>
+
 
 
 </th:block>

@@ -12,10 +12,16 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: create-drop
+  mvc:
+    throw
+  config:
+    import: "classpath:breeds.properties"
+  mail:
+    host: 
 server:
   port: 8081
 logging:
     level:
-#      org.springframework.security: DEBUG
+      org.springframework.security: DEBUG
 #      thymeleaf: DEBUG
       org.hibernate: DEBUG
