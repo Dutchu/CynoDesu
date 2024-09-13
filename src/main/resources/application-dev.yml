@@ -15,7 +15,7 @@ spring:
   mvc:
     throw
   config:
-    import: "classpath:breeds.properties"
+    import: ["classpath:breeds.properties", "classpath:cert.properties"]
   mail:
     host: 
 server:
@@ -23,5 +23,5 @@ server:
 logging:
     level:
       org.springframework.security: DEBUG
-#      thymeleaf: DEBUG
+      thymeleaf: DEBUG
       org.hibernate: DEBUG

@@ -6,5 +6,5 @@ function toggleModal(modalId) {
 function closeBackDrop() {
     // Close the modal using jQuery and Bootstrap
     // Manually remove the modal backdrop
-    $('.modal-backdrop').remove();
+    // $('.modal-backdrop').remove();
 }

@@ -1,6 +1,7 @@
 package edu.weeia.cynodesu.repositories;
 
 import edu.weeia.cynodesu.api.v1.model.DogDetailDto;
+import edu.weeia.cynodesu.api.v1.model.DogPreviewDTO;
 import edu.weeia.cynodesu.domain.Dog;
 import edu.weeia.cynodesu.domain.DogStatus;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
+import java.util.Set;
 
 @Repository
 public interface DogRepository extends JpaRepository<Dog, Long> {
@@ -30,4 +34,13 @@ public interface DogRepository extends JpaRepository<Dog, Long> {
     @Query("SELECT d FROM Dog d WHERE d.status = :status")
     Page<Dog> findAllByDogStatus(Pageable pageable, @Param("status") DogStatus status);
 
+    @Query("""
+            SELECT d FROM Dog d WHERE d.breedingFacility.id IN :facilities
+            """)
+    List<Dog> findAllByIds(@Param("facilities") Set<Long> facilitiesIdSet);
+
+    @Query("""
+        SELECT d FROM Dog d WHERE d.id IN :dogIds
+        """)
+    Page<Dog> getAllPreviewByIds(Set<Long> dogIds, Pageable pageable);
 }

@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Data
@@ -40,5 +41,12 @@ public class BreedingFacility extends BaseAuditingEntity {
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "breedingFacility")
     private Set<Dog> dogs = new HashSet<>();
+
+    // Helper method to get user IDs associated with the BreedingFacility
+    public Set<Long> getUserIds() {
+        return users.stream()
+                .map(AppUser::getId)
+                .collect(Collectors.toSet());
+    }
 
 }

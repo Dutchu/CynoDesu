@@ -2,12 +2,15 @@ package edu.weeia.cynodesu.services;
 
 import edu.weeia.cynodesu.api.v1.mapper.DogMapper;
 import edu.weeia.cynodesu.api.v1.model.*;
+import edu.weeia.cynodesu.controllers.SseController;
 import edu.weeia.cynodesu.domain.*;
 import edu.weeia.cynodesu.exceptions.DogCreationException;
 import edu.weeia.cynodesu.exceptions.DogImageUploadException;
 import edu.weeia.cynodesu.exceptions.ResourceNotFoundException;
+import edu.weeia.cynodesu.repositories.CompetitionRepository;
 import edu.weeia.cynodesu.repositories.DogRepository;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -18,23 +21,38 @@ import java.util.Collections;
 import java.util.List;
 import java.util.OptionalDouble;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DogServiceImpl implements DogService {
 
     protected final DogMapper dogMapper;
     private final DogRepository dogRepository;
+
+
     private final FileService fileService;
     private final BreedingFacilityImpl breedingFacilityImpl;
     private final BreedService breedService;
+    private final SseController sseController;
+    private final CompetitionService competitionService;
 
 
-    public DogServiceImpl(DogMapper dogMapper, BreedingFacilityImpl getBreedingFacilityImpl, DogRepository dogRepository, BreedingFacilityImpl breedingFacilityImpl, FileService fileService, BreedService breedService) {
+    public DogServiceImpl(DogMapper dogMapper, BreedingFacilityImpl getBreedingFacilityImpl, DogRepository dogRepository, BreedingFacilityImpl breedingFacilityImpl, FileService fileService, BreedService breedService, SseController sseController,@Lazy CompetitionService competitionService) {
         this.dogMapper = dogMapper;
         this.dogRepository = dogRepository;
         this.breedingFacilityImpl = breedingFacilityImpl;
         this.fileService = fileService;
         this.breedService = breedService;
+        this.sseController = sseController;
+        this.competitionService = competitionService;
+    }
+
+    @Override
+    @Transactional
+    public List<DogPreviewDTO> findAllByUser(String username) {
+        var foundFacilities = breedingFacilityImpl.findByUserUsername(username);
+        var foundIds = foundFacilities.stream().map(BaseEntity::getId).collect(Collectors.toSet());
+        return dogRepository.findAllByIds(foundIds).stream().map(DogMapper.INSTANCE::mapForPreviewListing).toList();
     }
 
 
@@ -46,11 +64,27 @@ public class DogServiceImpl implements DogService {
     }
 
 
+    @Transactional
+    public Dog findDogById(Long dogId) {
+        return dogRepository.findById(dogId)
+                .orElseThrow(() -> new ResourceNotFoundException("Dog with id: " + dogId + "not found!"));
+    }
+
     @Override
     @Cacheable("previewForPublicHomePage")
     public Page<DogPreviewDTO> previewForPublicHomePage(Pageable pageable) {
         return dogRepository.findWithUserAndAttachedFilesByStatus(DogStatus.ACCEPTED, pageable)
                 .map(DogMapper.INSTANCE::mapForPreviewListing);
+    }
+
+    @Override
+    @Transactional
+    public Page<DogPreviewDTO> getAllByCompetition(Long id, Pageable pageable) {
+        var foundCompetition = competitionService.findCompetition(id);
+        Set<DogCompetitionScore> scores = foundCompetition.getScores();
+        List<Dog> foundDogs = scores.stream().map(DogCompetitionScore::getDog).toList();
+        Set<Long> foundIds = foundDogs.stream().map(Dog::getId).collect(Collectors.toSet());
+        return dogRepository.getAllPreviewByIds(foundIds, pageable).map(DogMapper.INSTANCE::mapForPreviewListing);
     }
 
     @Override
@@ -65,11 +99,6 @@ public class DogServiceImpl implements DogService {
         return dogRepository.findById(id)
                 .map(DogMapper.INSTANCE::mapForDetailListing)
                 .orElseThrow(() -> new ResourceNotFoundException("Couldn't find dog with id: " + id));
-    }
-
-    @Override
-    public GetDogDTO getDogById(Long id) {
-        return null;
     }
 
     @Override
@@ -102,7 +131,6 @@ public class DogServiceImpl implements DogService {
     }
 
     @Override
-
     @Transactional
     public SavedDogDTO createDog(Long facilityId, CreateDogDTO dogDTO) {
         if (dogDTO == null) {
@@ -137,6 +165,8 @@ public class DogServiceImpl implements DogService {
         }
 
         Dog savedDog = dogRepository.save(dogToSave);
+
+        sseController.sendNotification("newDog", savedDog.getId());
 
         return new SavedDogDTO(
                 savedDog.getId(),

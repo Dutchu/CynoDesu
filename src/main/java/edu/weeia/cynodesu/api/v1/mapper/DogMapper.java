@@ -46,7 +46,7 @@ public interface DogMapper {
     DogDetailDto mapForDetailListing(Dog dog);
 
     @Named("instantToLocalDateTime")
-    default LocalDateTime mapInstantToLocalDateTime(Instant instant) {
+    public static LocalDateTime mapInstantToLocalDateTime(Instant instant) {
         return instant == null ? null : LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }
 

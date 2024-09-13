@@ -1,0 +1,80 @@
+Key Requirements for Your UI System
+User Interface for Regular Users (USER):
+
+Dog Management: Allows users to create and manage their own dogs.
+Competition Registration: Enables users to register their dogs for competitions.
+View Competition Results: Users can view scores and rankings for competitions they participated in.
+Status Tracking: Users can see the status (pending, accepted, rejected) of their dogs and competition entries.
+Admin Interface (ADMIN):
+
+Review and Approve Entities: Admins should be able to review newly created dogs and competition entries and set their status to accepted or rejected.
+Manage Competitions: Admins can create, update, and manage competition details.
+Assign Scores: Admins can assign scores to dogs in competitions.
+User Management: Admins can manage user profiles, including permissions and status.
+Suggested UI Components and Workflow
+1. Dashboard
+For Users:
+
+Overview of registered dogs, upcoming competitions, and recent scores.
+Notifications for status updates (e.g., dog accepted, competition entry accepted/rejected).
+Quick actions to add a new dog, register for a competition, or view competition results.
+For Admins:
+
+Overview of pending approvals (dogs, competitions, scores).
+Key metrics (e.g., number of competitions, dogs registered, pending reviews).
+Quick actions for reviewing pending entries, managing competitions, and user management.
+2. Dog Management Page
+For Users:
+A list of all dogs created by the user with details such as name, breed, age, status, and competitions participated in.
+Options to add, edit, or remove dogs.
+Status indicators showing whether a dog is "Pending Approval", "Accepted", or "Rejected".
+3. Competition Registration Page
+For Users:
+A list of available competitions to register for, with filters by location, date, type, etc.
+A registration form to register one or more dogs for selected competitions.
+A view showing the registration status (Pending, Accepted, Rejected) and allowing for withdrawal if needed.
+4. Competition Management Page
+For Admins:
+A list of all competitions with options to create new competitions or edit existing ones.
+Detailed view for each competition, showing registered dogs, their owners, and their current status.
+Actions for approving or rejecting registrations and assigning scores.
+5. Review and Approval Page
+For Admins:
+A consolidated view showing all pending entries: newly created dogs, competition registrations, and score entries.
+Filters to sort by type (dog, competition, score), user, date created, etc.
+Inline actions (approve, reject, add comments) to quickly process multiple entries.
+6. Scores Management Page
+For Admins:
+A page for each competition where admins can assign and update scores for dogs.
+View historical scores, add comments or feedback, and assign rankings.
+Workflow for Creating and Adding Dogs to Competitions and Certification Process
+Dog Creation (User Flow):
+
+Users go to the "Dog Management" page and fill out a form to create a new dog.
+Upon submission, the dog entry is set to "Pending" status and awaits admin review.
+Admins access the "Review and Approval" page, review the entry, and either accept or reject it.
+Competition Registration (User Flow):
+
+Users visit the "Competition Registration" page, choose a competition, and select one or more dogs to register.
+The registration entry is set to "Pending" status and awaits admin review.
+Admins access the "Review and Approval" page, review the competition entries, and either accept or reject them.
+Certification Process (Admin Flow):
+
+Admins access the "Review and Approval" page to see all new entities needing approval (dogs, competition entries, etc.).
+They can approve or reject entries, with options to provide feedback or request additional information from users.
+Score Assignment (Admin Flow):
+
+After a competition, admins go to the "Scores Management" page to assign and update scores for each dog.
+Once all scores are entered, they can finalize the results, which will be visible to users.
+Suggested Tools and Technologies
+Frontend Framework: Use a modern frontend framework like React or Vue.js to build a dynamic and responsive user interface.
+Backend: Utilize Spring Boot to handle server-side logic, including RESTful APIs for managing dogs, competitions, and scores.
+Thymeleaf Templates: Use Thymeleaf for server-side rendering of templates if you want to keep the app simple and avoid heavy JavaScript on the frontend.
+Real-Time Updates: Use Server-Sent Events (SSE) or WebSockets to push real-time notifications to users (e.g., when their dog or competition entry is approved).
+User Experience Enhancements
+Notification System: Implement a notification system that alerts users when their entries are approved, rejected, or need additional information.
+Search and Filter: Provide search and filter functionality on all major pages to help users and admins quickly find the information they need.
+Pagination: Implement pagination on lists (e.g., dogs, competitions) to manage large data sets efficiently.
+Responsive Design: Ensure the UI is responsive and works well on both desktop and mobile devices.
+Conclusion
+This suggested UI system should provide a comprehensive and user-friendly interface for both users and admins to manage dogs, competitions, and scores efficiently. By implementing these features, you can ensure a smooth workflow for creating, reviewing, and approving entities while maintaining a clear distinction between user and admin functionalities.

@@ -73,7 +73,7 @@ public class AuthController {
         var result = authService.signUp(validatedData);
 
         if (result.success()) {
-            sseController.sendNotification("New User Created: " + result.id());
+
             model.addAttribute("status", "success");
             model.addAttribute("message", messageSource.getMessage("app.auth.registration.success", null, Locale.getDefault()));
         } else {

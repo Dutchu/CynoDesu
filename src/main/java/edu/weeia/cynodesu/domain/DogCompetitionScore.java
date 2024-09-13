@@ -30,6 +30,7 @@ public class DogCompetitionScore {
     public DogCompetitionScore(Competition competition, Dog dog) {
         this.dog = dog;
         this.competition = competition;
+        this.id = new DogCompetitionScoreId(dog.getId(), competition.getId()); // Properly initialize ID here
     }
 
     private String note;

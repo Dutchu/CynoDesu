@@ -1,0 +1,131 @@
+<div th:fragment="list">
+    <div class="container py-5" id="dog-list">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <!--/*@thymesVar id="dog" type="edu.weeia.cynodesu.api.v1.model.DogPreviewDTO"*/-->
+            <div th:each="dog : ${dogs}" class="card m-2" style="width: 18rem;">
+                <img th:src="@{'data:image/png;base64,' + ${dog.icon}}" class="card-img-top"
+                     alt="Facility Icon" style="height: 180px; object-fit: cover;">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${dog.name}">Dog Name</h5>
+                    <p class="card-text" th:text="${dog.sex}">Gender</p>
+                    <p class="card-text" th:text="${dog.breed.getName()}">Breed</p>
+                    <p class="card-text" th:text="${dog.age}">Dog Age</p>
+                    <button type="button" class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#scoreDogModal"
+                            th:attr="hx-post=|/admin/competition/${competitionId}?dogId=${dog.id}|"
+                            hx-target="#modalBody"
+                            hx-swap="innerHTML">
+                        Score Dog
+                    </button>
+                    <!-- Add more dog details as needed -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center">
+        <div th:replace="~{_fragments/_utils :: pagination(|/admin/competition/${competitionId}|, ${dogs}, ${_page_begin}, ${_page_end}, ${pageNumbers})}"></div>
+    </div>
+</div>
+
+<div th:fragment="scoreModal">
+    <div id="scoreDogModal" class="modal fade" tabindex="-1" aria-labelledby="scoreDogLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="scoreDogLabel">Score Dog</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div th:fragment="form">
+    <form th:attr="hx-post=@{/admin/competition/{competitionId}/dog/{dogId}(competitionId=${competitionId}, dogId=${dogId})}"
+          hx-target="#message-container"
+          hx-on="htmx:afterRequest: toggleModal('scoreDogModal'); afterOnLoad: showToast()"
+          th:object="${scoreForm}"
+          method="post">
+
+        <div class="row mb-3">
+            <div class="col text-center">
+                <img th:src="@{'data:image/png;base64,' + ${icon}}"
+                     alt="Dog Icon" class="img-fluid" style="width: 100px; height: 100px;"/>
+            </div>
+        </div>
+        <div>
+            <label for="id">Dog Id:</label>
+            <input type="text" id="id" th:field="*{dogId}" readonly/>
+        </div>
+        <div>
+            <label for="name">Dog Name:</label>
+            <input type="text" id="name" th:field="*{dogName}" readonly/>
+        </div>
+        <div>
+            <label for="userId">Created By Id:</label>
+            <input type="text" id="userId" th:field="*{userId}" readonly/>
+        </div>
+        <div>
+            <label for="userName">Created By Username:</label>
+            <input type="text" id="userName" th:field="*{userName}" readonly/>
+        </div>
+        <div>
+            <label for="breedingFacilityId">Kennel Id:</label>
+            <input type="text" id="breedingFacilityId" th:field="*{breedingFacilityId}" readonly/>
+        </div>
+        <div>
+            <label for="breedingFacilityName">Kennel Name:</label>
+            <input type="text" id="breedingFacilityName" th:field="*{breedingFacilityName}" readonly/>
+        </div>
+        <div>
+            <label for="content">Notes:</label>
+            <input type="text" id="content" th:field="*{content}" readonly/>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <h6>Files:</h6>
+                <ul th:if="${docs != null}">
+                    <li th:each="file : ${docs}" th:text="${file.storedName}">
+                        <a th:href="@{/dog/pdf/{fileId}(fileId=${file.id})}" target="_blank" th:text="${file.storedName}">View PDF</a>
+                    </li>
+                </ul>
+                <span th:if="${docs == null}">No files</span>
+            </div>
+        </div>
+        <div class="row mb-3">
+            <div class="col">
+                <h6>Scores:</h6>
+                <ul th:if="${scores != null}">
+                    <li th:each="score : ${scores}" th:text="${score.competition.name}"></li>
+                    <li th:text="${score.score}"></li>
+                    <li th:text="${score.rank}"></li>
+                </ul>
+                <span th:if="${scores == null}">No scoring</span>
+            </div>
+        </div>
+
+        <!-- Add other fields here similarly for display -->
+
+        <!-- Input for Score -->
+        <div>
+            <label for="newScore">New Score:</label>
+            <input type="number" id="newScore" th:field="*{newScore}"/>
+        </div>
+
+        <!-- Input for Rank -->
+        <div>
+            <label for="newRank">New Rank:</label>
+            <input type="number" id="newRank" th:field="*{newRank}"/>
+        </div>
+
+        <div>
+            <button type="submit">Assign Score</button>
+        </div>
+    </form>
+</div>

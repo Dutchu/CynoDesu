@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 
 @Controller
-
 @RequestMapping(BreedingController.BASE_URL)
 public class BreedingController {
 

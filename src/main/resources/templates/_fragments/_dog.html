@@ -15,6 +15,14 @@
                     <p class="card-text" th:text="${dog.breed.getName()}">Breed</p>
                     <p class="card-text" th:text="${dog.age}">Dog Age</p>
                     <!-- Add more dog details as needed -->
+                    <button type="button" class="btn btn-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#dogDetailModal"
+                            th:attr="hx-get=|/dog/${dog.id}|"
+                            hx-target="#modalDogDetailBody"
+                            hx-swap="innerHTML">
+                        Score Dog
+                    </button>
                 </div>
             </div>
         </div>
@@ -99,7 +107,23 @@
 
 </div>
 
-<!-- File: fragments/dog-detail.html -->
+<div th:fragment="detailModal">
+    <div id="dogDetailModal" class="modal fade" tabindex="-1" aria-labelledby="dogDetailModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="dogDetailModalLabel">Dog Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalDogDetailBody">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div th:fragment="dog-detail">
     <div class="container">
         <!-- Dog Icon -->
@@ -151,24 +175,30 @@
             </div>
         </div>
 
-        <!-- Files -->
         <div class="row mb-3">
             <div class="col">
                 <h6>Files:</h6>
-                <ul>
-                    <li th:each="file : ${dogDetail.docs}" th:text="${file.fileName}"></li>
+                <ul th:if="${dogDetail.docs != null}">
+                    <li th:each="file : ${dogDetail.docs}">
+                        <a th:href="@{/dog/pdf/{fileId}(fileId=${file.id})}" target="_blank" th:text="${file.storedName}">View PDF</a>
+                        <iframe th:src="@{/dog/pdf/{fileId}(fileId=${file.id})}" width="100%" height="500px"></iframe>
+                    </li>
                 </ul>
+                <span th:if="${dogDetail.docs == null}">No files</span>
             </div>
         </div>
 
         <!-- Scores -->
-        <div class="row mb-3">
-            <div class="col">
-                <h6>Scores:</h6>
-                <ul>
-                    <li th:each="score : ${dogDetail.scores}" th:text="${score}"></li>
-                </ul>
-            </div>
-        </div>
+<!--        <div class="row mb-3">-->
+<!--            <div class="col">-->
+<!--                <h6>Scores:</h6>-->
+<!--                <ul th:if="${dogDetail.scores != null}">-->
+<!--                    <li th:each="score : ${dogDetail.scores}" th:text="${score.competition.name}"></li>-->
+<!--                    <li th:text="${score.score}"></li>-->
+<!--                    <li th:text="${score.rank}"></li>-->
+<!--                </ul>-->
+<!--                <span th:if="${dogDetail.scores == null}">No scoring</span>-->
+<!--            </div>-->
+<!--        </div>-->
     </div>
 </div>

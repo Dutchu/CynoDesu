@@ -17,9 +17,10 @@ public class ReceivedFile {
     @Column(columnDefinition = "uuid")
     UUID id;
 
+    @Lob
+    byte[] data;
     Instant receivedDate;
     String originalFileName;
-
     String storedName;
 
     //TODO: Look into possibility to make it configurable from app.properties
@@ -35,6 +36,7 @@ public class ReceivedFile {
 
     public enum FileGroup {
         NOTE_ATTACHMENT,
-        PICTURE
+        PICTURE,
+        CERTIFICATE
     }
 }

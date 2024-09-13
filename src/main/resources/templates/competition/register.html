@@ -34,16 +34,10 @@
 <!--Initially we want Top level item from a tree in form of BreedingFacility -->
 <!-- Here are injected collections of Breeding Facilities and Dogs -->
 <div id="renderSpace" class="content">
-    <div hx-get="/facility/list" hx-trigger="load" hx-target="#renderSpace" hx-swap="innerHTML"> Load
-        Facilities
-    </div>
+    <div th:replace="_fragments/_competition-dog :: form"></div>
 </div>
 
-<!-- Include the form modals -->
-<div th:replace="~{_fragments/_facility :: create-facility-form}"></div>
-<!--        Can't ready dog form because it's depended on facility -->
-<!--        <div th:replace="~{_fragments/_dog :: create-dog-form}"></div>-->
-<div th:replace="_fragments/_dog :: detailModal"></div>
+
 
 <!-- Include the footer fragment-->
 <div th:replace="~{_fragments/_footer :: page-footer}" th:remove="tag"></div>

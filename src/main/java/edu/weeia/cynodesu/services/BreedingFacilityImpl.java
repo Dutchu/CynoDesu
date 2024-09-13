@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -69,6 +70,14 @@ public class BreedingFacilityImpl implements BreedingFacilityService {
                 facility.getAddress(),
                 facility.getIcon()
         ));
+    }
+
+    @Transactional
+    public List<BreedingFacility> findByUserUsername(String username) {
+        AppUser user = userService.findWithAuthoritiesByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException("User with username: " + username + ", not found."));
+
+        return breedingFacilityRepository.findBreedingFacilitiesByUserId(user.getId());
     }
 
     boolean existsById(Long id) {

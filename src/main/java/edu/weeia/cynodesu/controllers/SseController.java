@@ -28,10 +28,10 @@ public class SseController {
     }
 
     // Method to send notifications to all connected clients
-    public void sendNotification(String message) {
+    public void sendNotification(String eventName, Object data) {
         for (SseEmitter emitter : emitters) {
             try {
-                emitter.send(message, MediaType.TEXT_PLAIN);
+                emitter.send(SseEmitter.event().name(eventName).data(data));
             } catch (IOException e) {
                 emitters.remove(emitter); // Remove emitter if sending fails
             }

@@ -1,6 +1,7 @@
 package edu.weeia.cynodesu.services;
 
 import edu.weeia.cynodesu.api.v1.model.*;
+import edu.weeia.cynodesu.controllers.SseController;
 import edu.weeia.cynodesu.domain.AppUser;
 import edu.weeia.cynodesu.security.AppUserDetails;
 import edu.weeia.cynodesu.security.AppUserDetailsService;
@@ -24,13 +25,15 @@ public class AuthServiceImpl implements AuthService {
     private final UserService userService;
     private final AuthorityService authorityService;
     private final AppUserDetailsService appUserDetailsService;
+    private final SseController sseController;
 
-    public AuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserService userService, AuthorityService authorityService, AppUserDetailsService appUserDetailsService) {
+    public AuthServiceImpl(AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder, UserService userService, AuthorityService authorityService, AppUserDetailsService appUserDetailsService, SseController sseController) {
         this.authenticationManager = authenticationManager;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.authorityService = authorityService;
         this.appUserDetailsService = appUserDetailsService;
+        this.sseController = sseController;
     }
 
     @Override
@@ -56,6 +59,8 @@ public class AuthServiceImpl implements AuthService {
 
         //Save User
         Long id = userService.save(hashedUser).Id();
+
+        sseController.sendNotification("newUser", id);
 
         //return Token
         return new UserSingUpResponseDTO(

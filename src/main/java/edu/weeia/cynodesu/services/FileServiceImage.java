@@ -1,8 +1,8 @@
 package edu.weeia.cynodesu.services;
 
-import edu.weeia.cynodesu.domain.AppUser;
-import edu.weeia.cynodesu.domain.BreedingFacility;
-import edu.weeia.cynodesu.domain.Dog;
+import edu.weeia.cynodesu.domain.*;
+import edu.weeia.cynodesu.exceptions.ResourceNotFoundException;
+import edu.weeia.cynodesu.repositories.FileRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import javax.imageio.ImageIO;
@@ -13,9 +13,16 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @Service
 public class FileServiceImage implements FileService {
+    private final FileRepository fileRepository;
+
+    public FileServiceImage(FileRepository fileRepository) {
+        this.fileRepository = fileRepository;
+    }
+
     @Override
     public byte[] compress(MultipartFile file) throws IOException {
         BufferedImage bufferedImage = ImageIO.read(file.getInputStream());
@@ -51,6 +58,13 @@ public class FileServiceImage implements FileService {
         return baos.toByteArray();
     }
 
+    @Override
+    public byte[] getPdfFileById(UUID fileId) {
+        return fileRepository.findById(fileId)
+                .map(ReceivedFile::getData)
+                .orElseThrow(() -> new ResourceNotFoundException("File with UUID: " + fileId + " not found!"));
+    }
+
     // Static inner class for building default images
     private static class DefaultImageBuilder {
 
@@ -62,6 +76,7 @@ public class FileServiceImage implements FileService {
             defaultImagesMap.put(Dog.class, "/static/images/default-dog.png");
             defaultImagesMap.put(AppUser.class, "/static/images/default-user.jpg");
             defaultImagesMap.put(BreedingFacility.class, "/static/images/default-facility.jpg");
+            defaultImagesMap.put(DogCompetitionScore.class, "/static/images/cert-background.jpg");
             // Add more mappings as needed
         }
 

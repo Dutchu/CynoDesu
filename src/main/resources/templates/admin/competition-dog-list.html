@@ -34,16 +34,10 @@
 <!--Initially we want Top level item from a tree in form of BreedingFacility -->
 <!-- Here are injected collections of Breeding Facilities and Dogs -->
 <div id="renderSpace" class="content">
-    <div hx-get="/facility/list" hx-trigger="load" hx-target="#renderSpace" hx-swap="innerHTML"> Load
-        Facilities
-    </div>
+    <div th:replace="admin/_score-dog :: list"></div>
 </div>
 
-<!-- Include the form modals -->
-<div th:replace="~{_fragments/_facility :: create-facility-form}"></div>
-<!--        Can't ready dog form because it's depended on facility -->
-<!--        <div th:replace="~{_fragments/_dog :: create-dog-form}"></div>-->
-<div th:replace="_fragments/_dog :: detailModal"></div>
+<div th:replace="~{admin/_score-dog :: scoreModal}"></div>
 
 <!-- Include the footer fragment-->
 <div th:replace="~{_fragments/_footer :: page-footer}" th:remove="tag"></div>
@@ -69,11 +63,9 @@
 <script th:src="@{/js/close-modal.js}"></script>
 <script th:src="@{/js/back-button.js}"></script>
 <script th:src="@{/js/validation-error.js}"></script>
-<!--<script th:src="@{/js/side-bar.js}"></script>-->
 
 <!--SIDEBAR-->
 <script th:src="@{/js/side-bar.js}"></script>
-<script th:src="@{/webjars/bootstrap/5.3.0/js/bootstrap.bundle.min.js}"></script>
 <script src="https://kit.fontawesome.com/a076d05399.js"></script>
 <script src="https://unpkg.com/htmx.org@1.9.2"></script>
 <!-- jQuery for bootstrap select and toggle modal like create-forms -->

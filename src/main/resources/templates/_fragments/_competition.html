@@ -1,0 +1,74 @@
+<div th:fragment="list">
+    <button sec:authorize="hasRole('ROLE_ADMIN')" type="button" class="btn btn-primary" data-bs-toggle="modal"
+            data-bs-target="#createCompetitionModal">
+        Create Competition
+    </button>
+    <div class="row">
+        <!-- Iterate over the list of competitions -->
+        <div class="col-md-4" th:each="competition : ${competitions}">
+            <!-- Bootstrap Card -->
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body">
+                    <!-- Display competition name -->
+                    <h5 class="card-title" th:text="${competition.name}">Competition Name</h5>
+                    <!-- Display competition location -->
+                    <p class="card-text" th:text="${competition.location}">Location</p>
+                    <p class="card-text" th:text="${competition.dateTime}">Location</p>
+                    <!-- Button to register a dog for the competition -->
+                    <a th:href="@{/competition/{id}(id=${competition.id})}" class="btn btn-success">
+                        Register Dog for Competition
+                    </a>
+                    <a sec:authorize="hasRole('ROLE_ADMIN')" th:href="@{/admin/competition/{id}(id=${competition.id})}" class="btn btn-success">
+                        Score Dogs
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="flex-box" th:replace="~{_fragments/_utils :: pagination('/admin/competition', ${competitions}, ${_page_begin}, ${_page_end}, ${pageNumbers})}"></div>
+</div>
+
+<div th:fragment="modal">
+    <div th:id="createCompetitionModal" class="modal fade" tabindex="-1" aria-labelledby="createCompetitionModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="createCompetitionModalLabel">Create Competition</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <div th:replace="~{_fragments/_competition :: form}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="form">
+    <form th:action="@{/admin/competition}" th:object="${competitionCreateForm}"
+          method="post" enctype="multipart/form-data"
+          hx-post="/admin/competition"
+          hx-target="#renderSpace"
+          hx-swap="innerHTML">
+
+        <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" th:field="*{name}" required/>
+            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="location" class="form-label">Location</label>
+            <input type="text" class="form-control" id="location" name="firstName" th:field="*{location}" required/>
+            <div th:if="${#fields.hasErrors('location')}" th:errors="*{location}" class="text-danger"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="datetime" class="form-label">Date of Venue</label>
+            <input type="datetime-local" class="form-control" id="datetime" name="date" th:field="*{date}" required/>
+            <div th:if="${#fields.hasErrors('date')}" th:errors="*{date}" class="text-danger"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Event</button>
+    </form>
+</div>

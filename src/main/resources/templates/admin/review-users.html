@@ -99,6 +99,7 @@
             <!-- Submit button -->
             <button type="submit" class="btn btn-primary mt-3">Submit</button>
         </form>
+        <div class="flex-box" th:replace="~{_fragments/_utils :: pagination('/admin/review-users', ${users}, ${_page_begin}, ${_page_end}, ${pageNumbers})}"></div>
     </div>
 </div>
 

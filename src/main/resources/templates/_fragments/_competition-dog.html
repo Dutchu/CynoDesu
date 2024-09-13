@@ -1,0 +1,33 @@
+<div th:fragmnet="modal">
+    <div th:id="competitionRegisterModal" class="modal fade" tabindex="-1" aria-labelledby="competitionRegisterModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="competitionRegisterModalLabel">Create Competition</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <div th:replace="~{_fragments/_competition-register :: form}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="form">
+    <form th:action="@{/competition/{competitionId}/dog/{dogId}(competitionId=${competitionId}, dogId=${registerForm.dogId})}"  th:object="${registerForm}"
+          method="post" enctype="multipart/form-data">
+
+        <!-- Dropdown for user's dogs -->
+        <div class="mb-3">
+            <label for="dogId" class="form-label">Select Dog</label>
+            <select th:field="*{dogId}" id="dogId" class="form-select">
+                <option value="" disabled selected>Choose a Dog</option>
+                <!-- Loop through user's dogs and create options -->
+                <option th:each="dog : ${userDogs}" th:value="${dog.id}" th:text="${dog.name}">Dog Name</option>
+            </select>
+            <div th:if="${#fields.hasErrors('dogId')}" th:errors="*{dogId}" class="text-danger"></div>
+        </div>
+        <button type="submit" class="btn btn-primary">Create Event</button>
+    </form>
+</div>

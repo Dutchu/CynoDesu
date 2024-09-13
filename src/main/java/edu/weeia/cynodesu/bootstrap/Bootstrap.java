@@ -1,5 +1,6 @@
 package edu.weeia.cynodesu.bootstrap;
 
+import edu.weeia.cynodesu.api.v1.model.CompetitionCreateForm;
 import edu.weeia.cynodesu.api.v1.model.CreateDogDTO;
 import edu.weeia.cynodesu.api.v1.model.CreateFacilityDTO;
 import edu.weeia.cynodesu.api.v1.model.GetBreedingFacilityPreviewDTO;
@@ -11,6 +12,7 @@ import edu.weeia.cynodesu.repositories.AuthorityRepository;
 import edu.weeia.cynodesu.security.AppUserDetails;
 import edu.weeia.cynodesu.security.AppUserDetailsService;
 import edu.weeia.cynodesu.services.*;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.userdetails.User;
@@ -25,6 +27,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Optional;
 
 @Component
@@ -40,8 +45,9 @@ public class Bootstrap implements CommandLineRunner {
     private final FileServiceImage fileService;
     private final AppUserDetailsService appUserDetailsService;
     private final BreedService breedService;
+    private final CompetitionService competitionService;
 
-    public Bootstrap(AuthorityRepository authorityRepository, DogService dogService, AppUserRepository appUserRepository, AuthorityService authorityService, PasswordEncoder passwordEncoder, BreedingFacilityService breedingFacilityService, AppUserDetailsService userDetailsService, UserService userService, FileServiceImage fileService, AppUserDetailsService appUserDetailsService, BreedService breedService) {
+    public Bootstrap(AuthorityRepository authorityRepository, DogService dogService, AppUserRepository appUserRepository, AuthorityService authorityService, PasswordEncoder passwordEncoder, BreedingFacilityService breedingFacilityService, AppUserDetailsService userDetailsService, UserService userService, FileServiceImage fileService, AppUserDetailsService appUserDetailsService, BreedService breedService, CompetitionService competitionService) {
         this.authorityRepository = authorityRepository;
         this.dogService = dogService;
         this.appUserRepository = appUserRepository;
@@ -56,6 +62,7 @@ public class Bootstrap implements CommandLineRunner {
         this.fileService = fileService;
         this.appUserDetailsService = appUserDetailsService;
         this.breedService = breedService;
+        this.competitionService = competitionService;
     }
 
     @Override
@@ -66,9 +73,18 @@ public class Bootstrap implements CommandLineRunner {
         //TODO: key users should also exists as parameters in app.properties or Constants.class with credentials as secrets.
         registerAdmin();
         registerUser();
+//        createCompetition();
 //        createDogs();
 //        loadOwners();
 //        loadDogs();
+    }
+
+    private void createCompetition() {
+        var com = new CompetitionCreateForm();
+        com.setName("Testing Competition");
+        com.setLocation("ul. Starorudzka 156, Lodz 93-030");
+        com.setDate(LocalDateTime.now().plusDays(2));
+        competitionService.save(com);
     }
 
 //    @Transactional

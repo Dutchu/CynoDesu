@@ -64,6 +64,7 @@ public class DevSecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/**").authenticated()
                         .requestMatchers("/home").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
+                        .requestMatchers("/competition/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
                         .requestMatchers("/sse/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
                         .requestMatchers("/dog/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
                         .requestMatchers("/facilities/**").hasAnyAuthority(Constants.ROLE_ADMIN, Constants.ROLE_USER)
